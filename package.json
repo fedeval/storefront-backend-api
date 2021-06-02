@@ -8,7 +8,8 @@
     "start": "nodemon src/server.ts",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
     "jasmine": "jasmine",
-    "test": "npm run build && npm run jasmine"
+    "test": "npm run build && npm run jasmine",
+    "lint": "eslint . --ext .ts"
   },
   "author": "Udacity",
   "license": "ISC",
@@ -21,6 +22,9 @@
     "@types/jasmine": "^3.6.3",
     "@types/node": "^15.6.2",
     "@types/pg": "^7.14.11",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.27.0",
     "jasmine": "^3.6.4",
     "jasmine-spec-reporter": "^6.0.0",
     "nodemon": "^2.0.7",
