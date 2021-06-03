@@ -27,8 +27,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
-|        PRODUCTS                    |
-| ---------------------------------- |
 | Column        | Type               |
 | ------------- |:------------------:|
 | id            | SERIAL PRIMARY KEY |
@@ -43,8 +41,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - lastName
 - password
 
-|        USERS                       |
-| ---------------------------------- |
 | Column        | Type               |
 | ------------- |:------------------:|
 | id            | SERIAL PRIMARY KEY |
@@ -66,7 +62,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 | ------------- |:---------------------------:|
 | id            | SERIAL PRIMARY KEY          |
 | userId        | FOREIGN KEY to USERS        |
-| status        | ENUM ('active','complete') |
+| status        | ENUM ('active','complete')  |
 
 Since an order has many products and a product can be in many orders, we need a join
 table to represent this N:N relationship.
@@ -79,3 +75,4 @@ table to represent this N:N relationship.
 | productId     | FOREIGN KEY to PRODUCTS    |
 | quantity      | INTEGER                    |
 | orderId       | FOREIGN KEY to ORDERS      |
+
