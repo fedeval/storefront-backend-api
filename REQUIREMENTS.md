@@ -17,8 +17,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Create [token required] : `'/users' [POST]`
 
 #### Orders
-- Current Order by user (args: user id)[token required] : `'users/:id/orders?status=active' [GET]`
-- [OPTIONAL] Completed Orders by user (args: user id)[token required] `'users/:id/orders?status=completed' [GET]`
+- Current Order by user (args: user id)[token required] : `'orders/users/:userId/current' [GET]`
+- [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/users/:userId/completed' [GET]`
 
 ## Data Shapes
 #### Product
@@ -38,6 +38,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### User
 - id
+- username
 - firstName
 - lastName
 - password
@@ -47,6 +48,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 | Column        | Type               |
 | ------------- |:------------------:|
 | id            | SERIAL PRIMARY KEY |
+| username      | VARCHAR  UNIQUE    |
 | firstName     | VARCHAR            |
 | lastName      | VARCHAR            |
 | password      | VARCHAR            |
@@ -63,7 +65,17 @@ These are the notes from a meeting with the frontend developer that describe wha
 | Column        | Type                       |
 | ------------- |:--------------------------:|
 | id            | SERIAL PRIMARY KEY         |
-| productId     | FOREIGN KEY to PRODUCTS    |
-| quantity      | INTEGER                    |
 | userId        | FOREIGN KEY to USERS       |
 | status        | ENUM ('active','complete') |
+
+Since an order has many products and a product can be in many orders, we need a join
+table to represent this N:N relationship.
+
+|        ORDER_PRODUCTS                      |
+| ------------------------------------------ |
+| Column        | Type                       |
+| ------------- |:--------------------------:|
+| id            | SERIAL PRIMARY KEY         |
+| productId     | FOREIGN KEY to PRODUCTS    |
+| quantity      | INTEGER                    |
+| orderId       | FOREIGN KEY to ORDERS      |
