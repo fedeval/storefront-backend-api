@@ -27,8 +27,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
-|        PRODUCTS                    |
-| ---------------------------------- |
 | Column        | Type               |
 | ------------- |:------------------:|
 | id            | SERIAL PRIMARY KEY |
@@ -42,8 +40,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - lastName
 - password
 
-|        USERS                       |
-| ---------------------------------- |
 | Column        | Type               |
 | ------------- |:------------------:|
 | id            | SERIAL PRIMARY KEY |
@@ -58,8 +54,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - user_id
 - status of order (active or complete)
 
-|        ORDERS                              |
-| ------------------------------------------ |
 | Column        | Type                       |
 | ------------- |:--------------------------:|
 | id            | SERIAL PRIMARY KEY         |
