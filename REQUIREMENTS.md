@@ -5,33 +5,51 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index : `'/products' [GET]`
+- Show : `'/products/:id' [GET]`
+- Create [token required] : `'/products' [POST]`
+- [OPTIONAL] Top 5 most popular products  : `'/products/topfive' [GET]`
+- [OPTIONAL] Products by category (args: product category) : `'/products?category=CATEGORY_NAME'[GET]`
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required] : `'/users' [GET]`
+- Show [token required] : `'/users/:id' [GET]`
+- Create [token required] : `'/users' [POST]`
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required] : `'users/:id/orders?status=active' [GET]`
+- [OPTIONAL] Completed Orders by user (args: user id)[token required] `'users/:id/orders?status=completed' [GET]`
 
 ## Data Shapes
 #### Product
--  id
+- id
 - name
 - price
 - [OPTIONAL] category
+
+|        PRODUCTS                    |
+| ---------------------------------- |
+| Column        | Type               |
+| ------------- |:------------------:|
+| id            | SERIAL PRIMARY KEY |
+| name          | VARCHAR            |
+| price         | INTEGER            |
+| category      | VARCHAR            |
 
 #### User
 - id
 - firstName
 - lastName
 - password
+
+|        USERS                       |
+| ---------------------------------- |
+| Column        | Type               |
+| ------------- |:------------------:|
+| id            | SERIAL PRIMARY KEY |
+| firstName     | VARCHAR            |
+| lastName      | VARCHAR            |
+| password      | VARCHAR            |
 
 #### Orders
 - id
@@ -40,3 +58,12 @@ These are the notes from a meeting with the frontend developer that describe wha
 - user_id
 - status of order (active or complete)
 
+|        ORDERS                              |
+| ------------------------------------------ |
+| Column        | Type                       |
+| ------------- |:--------------------------:|
+| id            | SERIAL PRIMARY KEY         |
+| productId     | FOREIGN KEY to PRODUCTS    |
+| quantity      | INTEGER                    |
+| userId        | FOREIGN KEY to USERS       |
+| status        | ENUM ('active','complete') |
