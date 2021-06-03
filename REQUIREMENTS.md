@@ -60,7 +60,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 | ------------- |:---------------------------:|
 | id            | SERIAL PRIMARY KEY          |
 | userId        | FOREIGN KEY to USERS        |
-| status        | ENUM ('active','complete')  |
+| currentStatus | ENUM ('active','complete')  |
 
 Since an order has many products and a product can be in many orders, we need a join
 table to represent this N:N relationship.
