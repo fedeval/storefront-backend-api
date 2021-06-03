@@ -56,8 +56,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - user_id
 - status of order (active or complete)
 
-|        ORDERS                               |
-| ------------------------------------------- |
 | Column        | Type                        |
 | ------------- |:---------------------------:|
 | id            | SERIAL PRIMARY KEY          |
@@ -67,8 +65,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 Since an order has many products and a product can be in many orders, we need a join
 table to represent this N:N relationship.
 
-|        ORDER_PRODUCTS                      |
-| ------------------------------------------ |
 | Column        | Type                       |
 | ------------- |:--------------------------:|
 | id            | SERIAL PRIMARY KEY         |
