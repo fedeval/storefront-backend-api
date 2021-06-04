@@ -1,6 +1,6 @@
 import { User, UserStore } from '../models/user';
-import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import _ from 'lodash';
 
 dotenv.config();
 
@@ -26,13 +26,11 @@ const userList: User[] = [
   }
 ];
 
-// Strip passwords to make test comparisons simpler
+// Add ids and strip passwords to make test comparisons simpler
 const userListWithIdAndNoPwd = userList.map((user, index) => {
   return {
     id: index + 1,
-    username: user.username,
-    firstName: user.firstName,
-    lastName: user.lastName
+    ..._.pick(user, ['username', 'firstName', 'lastName'])
   };
 });
 
@@ -61,10 +59,10 @@ describe('Testing user model', () => {
 
   it('index should return a list of all users', async () => {
     const result = await store.index();
-    const resultWithoutPwd = result.map((user, index) => {
-
-    })
-    expect(result).toEqual(userListWithIdAndNoPwd);
+    const resultWithoutPwd = result.map((user) => {
+      return _.pick(user, ['id', 'username', 'firstName', 'lastName']);
+    });
+    expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd);
   });
 
   it('create should add a user', async () => {
@@ -74,29 +72,33 @@ describe('Testing user model', () => {
       lastName: 'Taylor',
       password: 'testpwd4'
     });
-    expect(result).toBe({
+    const resultWithoutPwd = _.pick(result, [
+      'id',
+      'username',
+      'firstName',
+      'lastName'
+    ]);
+    expect(resultWithoutPwd).toEqual({
       id: 4,
       username: 'testuser4',
       firstName: 'Roger',
-      lastName: 'Taylor',
-      password: bcrypt.hashSync(
-        'testpwd4' + process.env.PEPPER,
-        parseInt(process.env.SALT_ROUNDS as unknown as string)
-      )
+      lastName: 'Taylor'
     });
   });
 
   it('show should return the user with the given id', async () => {
     const result = await store.show(4);
-    expect(result).toBe({
+    const resultWithoutPwd = _.pick(result, [
+      'id',
+      'username',
+      'firstName',
+      'lastName'
+    ]);
+    expect(resultWithoutPwd).toEqual({
       id: 4,
       username: 'testuser4',
       firstName: 'Roger',
-      lastName: 'Taylor',
-      password: bcrypt.hashSync(
-        'testpwd4' + process.env.PEPPER,
-        parseInt(process.env.SALT_ROUNDS as unknown as string)
-      )
+      lastName: 'Taylor'
     });
   });
 
@@ -107,6 +109,12 @@ describe('Testing user model', () => {
 
   it('authenticate should return a user for the right user and password combination', async () => {
     const result = await store.authenticate('testuser1', 'testpwd1');
-    expect(result).toBe(userListWithIdAndHashPwd[0]);
+    const resultWithoutPwd = _.pick(result, [
+      'id',
+      'username',
+      'firstName',
+      'lastName'
+    ]);
+    expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
   });
 });

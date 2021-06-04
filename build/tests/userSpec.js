@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = require("../models/user");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const lodash_1 = __importDefault(require("lodash"));
 dotenv_1.default.config();
 const store = new user_1.UserStore();
 const userList = [
@@ -28,12 +28,12 @@ const userList = [
         password: 'testpwd3'
     }
 ];
-const basePwdStrings = ['testpwd1', 'testpwd2', 'testpwd3'];
-const hashedPwdStrings = basePwdStrings.map((pwd) => bcrypt_1.default.hashSync(pwd + process.env.PEPPER, parseInt(process.env.SALT_ROUNDS)));
-const userListWithIdAndHashPwd = userList.map((user, index) => {
-    user.id = index + 1;
-    user.password = hashedPwdStrings[index];
-    return user;
+// Add ids and strip passwords to make test comparisons simpler
+const userListWithIdAndNoPwd = userList.map((user, index) => {
+    return {
+        id: index + 1,
+        ...lodash_1.default.pick(user, ['username', 'firstName', 'lastName'])
+    };
 });
 describe('Testing user model', () => {
     it('has an index method', () => {
@@ -55,7 +55,10 @@ describe('Testing user model', () => {
     });
     it('index should return a list of all users', async () => {
         const result = await store.index();
-        expect(result).toEqual(userListWithIdAndHashPwd);
+        const resultWithoutPwd = result.map((user) => {
+            return lodash_1.default.pick(user, ['id', 'username', 'firstName', 'lastName']);
+        });
+        expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd);
     });
     it('create should add a user', async () => {
         const result = await store.create({
@@ -64,22 +67,22 @@ describe('Testing user model', () => {
             lastName: 'Taylor',
             password: 'testpwd4'
         });
-        expect(result).toBe({
+        const resultWithoutPwd = lodash_1.default.pick(result, ['id', 'username', 'firstName', 'lastName']);
+        expect(resultWithoutPwd).toEqual({
             id: 4,
             username: 'testuser4',
             firstName: 'Roger',
-            lastName: 'Taylor',
-            password: bcrypt_1.default.hashSync('testpwd4' + process.env.PEPPER, parseInt(process.env.SALT_ROUNDS))
+            lastName: 'Taylor'
         });
     });
     it('show should return the user with the given id', async () => {
         const result = await store.show(4);
-        expect(result).toBe({
+        const resultWithoutPwd = lodash_1.default.pick(result, ['id', 'username', 'firstName', 'lastName']);
+        expect(resultWithoutPwd).toEqual({
             id: 4,
             username: 'testuser4',
             firstName: 'Roger',
-            lastName: 'Taylor',
-            password: bcrypt_1.default.hashSync('testpwd4' + process.env.PEPPER, parseInt(process.env.SALT_ROUNDS))
+            lastName: 'Taylor'
         });
     });
     it('authenticate should return null for the wrong user and password combination', async () => {
@@ -88,6 +91,7 @@ describe('Testing user model', () => {
     });
     it('authenticate should return a user for the right user and password combination', async () => {
         const result = await store.authenticate('testuser1', 'testpwd1');
-        expect(result).toBe(userListWithIdAndHashPwd[0]);
+        const resultWithoutPwd = lodash_1.default.pick(result, ['id', 'username', 'firstName', 'lastName']);
+        expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
     });
 });

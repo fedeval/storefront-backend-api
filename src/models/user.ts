@@ -16,14 +16,12 @@ export type User = {
 };
 
 export class UserStore {
-  // TODO: index
   async index(): Promise<User[]> {
     try {
       const connection = await Client.connect();
       const sql = 'SELECT * FROM users;';
       const result = await connection.query(sql);
       connection.release();
-      console.log(typeof result.rows[0]);
       return result.rows.map((dbData) => {
         return convertColNamesToUserProps(
           dbData.id,
@@ -37,7 +35,7 @@ export class UserStore {
       throw new Error(`Cannot get users: ${err}`);
     }
   }
-  // TODO: show
+
   async show(userId: number): Promise<User> {
     try {
       const connection = await Client.connect();
@@ -56,7 +54,7 @@ export class UserStore {
       throw new Error(`Cannot get user: ${err}`);
     }
   }
-  // TODO: create
+
   async create(user: User): Promise<User> {
     try {
       const connection = await Client.connect();
@@ -85,7 +83,7 @@ export class UserStore {
       throw new Error(`Cannot create user ${user.username}: ${err}`);
     }
   }
-  // TODO: authenticate
+
   async authenticate(
     username: string,
     pwdString: string
