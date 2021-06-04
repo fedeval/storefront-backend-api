@@ -3,8 +3,8 @@ import { types } from 'pg';
 
 // Parse numeric types as floats instead of strings
 types.setTypeParser(1700, (value) => {
-  return parseFloat(value)
-})
+  return parseFloat(value);
+});
 
 export type Product = {
   id?: number;
@@ -15,7 +15,6 @@ export type Product = {
 };
 
 export class ProductStore {
-  // TODO: index action + category param (optional)
   async index(): Promise<Product[]> {
     try {
       const connection = await Client.connect();
@@ -27,7 +26,7 @@ export class ProductStore {
       throw new Error(`Cannot get products: ${err}`);
     }
   }
-  // TODO: show action
+
   async show(id: number): Promise<Product> {
     try {
       const connection = await Client.connect();
@@ -40,7 +39,7 @@ export class ProductStore {
       throw new Error(`Cannot get product: ${err}`);
     }
   }
-  // TODO: create action
+
   async create(product: Product): Promise<Product> {
     try {
       const connection = await Client.connect();
@@ -59,7 +58,7 @@ export class ProductStore {
       throw new Error(`Cannot add product ${product.name}: ${err}`);
     }
   }
-  // TODO: topfive action
+
   async delete(id: number): Promise<Product> {
     try {
       const connection = await Client.connect();

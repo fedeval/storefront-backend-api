@@ -12,7 +12,7 @@ const productList: Product[] = [
     name: 'kayak',
     price: 600,
     category: 'sports',
-    rating: 4.60
+    rating: 4.6
   },
   {
     name: 'carpet',
@@ -24,7 +24,7 @@ const productList: Product[] = [
     name: 'desk',
     price: 200,
     category: 'office',
-    rating: 3.90
+    rating: 3.9
   },
   {
     name: 'pen',
@@ -36,29 +36,29 @@ const productList: Product[] = [
     name: 'laptop',
     price: 2000,
     category: 'office',
-    rating: 4.90
+    rating: 4.9
   },
   {
     name: 'chair',
     price: 40,
     category: 'household',
-    rating: 4.20
+    rating: 4.2
   }
 ];
 const prodListWithId = productList.map((product, index) => {
-  product.id = index + 1
-  return product
-})
+  product.id = index + 1;
+  return product;
+});
 
 describe('Testing Product model', () => {
   it('Has an index method', () => {
     expect(store.index).toBeDefined();
   });
-  
+
   it('Has a show method', () => {
     expect(store.show).toBeDefined();
   });
-  
+
   it('Has a create method', () => {
     expect(store.create).toBeDefined();
   });
@@ -69,8 +69,8 @@ describe('Testing Product model', () => {
 
   beforeAll(async () => {
     for (const product of productList) {
-      await store.create(product)
-    };
+      await store.create(product);
+    }
   });
 
   it('index should return a list of all products', async () => {
@@ -83,14 +83,14 @@ describe('Testing Product model', () => {
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.20
+      rating: 4.2
     });
     expect(result).toEqual({
       id: 8,
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.20
+      rating: 4.2
     });
   });
 
@@ -101,7 +101,7 @@ describe('Testing Product model', () => {
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.20
+      rating: 4.2
     });
   });
 
@@ -113,7 +113,7 @@ describe('Testing Product model', () => {
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.20
+      rating: 4.2
     });
   });
 
