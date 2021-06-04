@@ -12,6 +12,21 @@ export type User = {
   password: string;
 };
 
+// SQL and JS have different naming conventions:
+// - lower_snake_case: SQL columns
+// - camelCase: JS object properties
+// To avoid breaking conventions we can use this function to convert from SQL naming to JS when importing data from the DB
+const convertColNamesToUserProps = (id: number, username: string, first_name: string, last_name: string, password: string): User => {
+  const user: User = {
+    id: id,
+    username: username,
+    firstName: first_name,
+    lastName: last_name,
+    password: password
+  }
+  return user
+}
+
 export class UserStore {
   // TODO: index
   async index(): Promise<User[]> {
@@ -20,7 +35,10 @@ export class UserStore {
       const sql = 'SELECT * FROM users;'
       const result = await connection.query(sql)
       connection.release()
-      return result.rows
+      console.log(typeof result.rows[0])
+      return result.rows.map((dbData) => {
+        return convertColNamesToUserProps(dbData.id, dbData.username, dbData.first_name, dbData.last_name, dbData.password)
+      })
     } catch (err) {
       throw new Error(`Cannot get users: ${err}`);
     }
@@ -31,9 +49,9 @@ export class UserStore {
       const connection = await Client.connect()
       const sql = 'SELECT * FROM users WHERE id = ($1)'
       const result = await connection.query(sql, [id])
-      const user = result.rows[0]
+      const { dbId, username, first_name, last_name, password } = result.rows[0]
       connection.release()
-      return user
+      return convertColNamesToUserProps(dbId, username, first_name, last_name, password)
     } catch (err) {
       throw new Error(`Cannot get user: ${err}`);
     }
@@ -45,9 +63,9 @@ export class UserStore {
       const sql = 'INSERT INTO users (username, first_name, last_name, password) VALUES ($1, $2, $3, $4)'
       const hashedPassword = bcrypt.hashSync(user.password + process.env.PEPPER, parseInt(process.env.SALT_ROUNDS as unknown as string))
       const result = await connection.query(sql, [user.username, user.firstName, user.lastName, hashedPassword])
-      const newUser = result.rows[0]
+      const { dbId, username, first_name, last_name, password } = result.rows[0]
       connection.release()
-      return newUser
+      return convertColNamesToUserProps(dbId, username, first_name, last_name, password)
     } catch (err) {
       throw new Error(`Cannot create user ${user.username}: ${err}`); 
     }
@@ -60,7 +78,8 @@ export class UserStore {
       const result = await connection.query(sql,[username])
       let auth: null| User = null
       if (result.rows.length) {
-        const user: User = result.rows[0]
+        const { dbId, username, first_name, last_name, dbPassword } = result.rows[0]
+        const user: User = convertColNamesToUserProps(dbId, username, first_name, last_name, dbPassword)
         if (bcrypt.compareSync(password + process.env.PEPPER, user.password)) {
           auth = user
         }
