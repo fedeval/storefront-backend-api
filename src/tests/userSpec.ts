@@ -5,7 +5,7 @@ import _ from 'lodash';
 dotenv.config();
 
 const store = new UserStore();
-const userList: User[] = [
+export const userList: User[] = [
   {
     username: 'testuser1',
     firstName: 'Freddie',
