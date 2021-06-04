@@ -51,16 +51,20 @@ const prodListWithId = productList.map((product, index) => {
 });
 
 describe('Testing Product model', () => {
-  it('Has an index method', () => {
+  it('has an index method', () => {
     expect(store.index).toBeDefined();
   });
 
-  it('Has a show method', () => {
+  it('has a show method', () => {
     expect(store.show).toBeDefined();
   });
 
-  it('Has a create method', () => {
+  it('has a create method', () => {
     expect(store.create).toBeDefined();
+  });
+
+  it('has a delete method', () => {
+    expect(store.delete).toBeDefined();
   });
 
   // it('Has a topfive method', () => {

@@ -13,7 +13,7 @@ const productList = [
         name: 'kayak',
         price: 600,
         category: 'sports',
-        rating: 4.60
+        rating: 4.6
     },
     {
         name: 'carpet',
@@ -25,7 +25,7 @@ const productList = [
         name: 'desk',
         price: 200,
         category: 'office',
-        rating: 3.90
+        rating: 3.9
     },
     {
         name: 'pen',
@@ -37,13 +37,13 @@ const productList = [
         name: 'laptop',
         price: 2000,
         category: 'office',
-        rating: 4.90
+        rating: 4.9
     },
     {
         name: 'chair',
         price: 40,
         category: 'household',
-        rating: 4.20
+        rating: 4.2
     }
 ];
 const prodListWithId = productList.map((product, index) => {
@@ -51,14 +51,17 @@ const prodListWithId = productList.map((product, index) => {
     return product;
 });
 describe('Testing Product model', () => {
-    it('Has an index method', () => {
+    it('has an index method', () => {
         expect(store.index).toBeDefined();
     });
-    it('Has a show method', () => {
+    it('has a show method', () => {
         expect(store.show).toBeDefined();
     });
-    it('Has a create method', () => {
+    it('has a create method', () => {
         expect(store.create).toBeDefined();
+    });
+    it('has a delete method', () => {
+        expect(store.delete).toBeDefined();
     });
     // it('Has a topfive method', () => {
     //   expect(store.topfive).toBeDefined();
@@ -67,7 +70,6 @@ describe('Testing Product model', () => {
         for (const product of productList) {
             await store.create(product);
         }
-        ;
     });
     it('index should return a list of all products', async () => {
         const result = await store.index();
@@ -78,14 +80,14 @@ describe('Testing Product model', () => {
             name: 'notepad',
             price: 9,
             category: 'office',
-            rating: 4.20
+            rating: 4.2
         });
         expect(result).toEqual({
             id: 8,
             name: 'notepad',
             price: 9,
             category: 'office',
-            rating: 4.20
+            rating: 4.2
         });
     });
     it('show should return the product with the given id', async () => {
@@ -95,7 +97,7 @@ describe('Testing Product model', () => {
             name: 'notepad',
             price: 9,
             category: 'office',
-            rating: 4.20
+            rating: 4.2
         });
     });
     it('delete should remove the product with the given id', async () => {
@@ -106,7 +108,7 @@ describe('Testing Product model', () => {
             name: 'notepad',
             price: 9,
             category: 'office',
-            rating: 4.20
+            rating: 4.2
         });
     });
     // TODO: test topfive

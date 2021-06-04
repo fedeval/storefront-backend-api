@@ -11,7 +11,6 @@ pg_1.types.setTypeParser(1700, (value) => {
     return parseFloat(value);
 });
 class ProductStore {
-    // TODO: index action + category param (optional)
     async index() {
         try {
             const connection = await database_1.default.connect();
@@ -24,7 +23,6 @@ class ProductStore {
             throw new Error(`Cannot get products: ${err}`);
         }
     }
-    // TODO: show action
     async show(id) {
         try {
             const connection = await database_1.default.connect();
@@ -38,7 +36,6 @@ class ProductStore {
             throw new Error(`Cannot get product: ${err}`);
         }
     }
-    // TODO: create action
     async create(product) {
         try {
             const connection = await database_1.default.connect();
@@ -57,7 +54,6 @@ class ProductStore {
             throw new Error(`Cannot add product ${product.name}: ${err}`);
         }
     }
-    // TODO: topfive action
     async delete(id) {
         try {
             const connection = await database_1.default.connect();
