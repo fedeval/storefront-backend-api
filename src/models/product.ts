@@ -4,7 +4,8 @@ export type Product = {
   id?: number,
   name: string,
   price: number,
-  category: string
+  category: string,
+  rating: number
 }
 
 export class ProductStore {

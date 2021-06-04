@@ -26,6 +26,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - name
 - price
 - [OPTIONAL] category
+- rating
 
 | Column        | Type               |
 | ------------- |:------------------:|
@@ -33,6 +34,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 | name          | VARCHAR            |
 | price         | INTEGER            |
 | category      | VARCHAR            |
+| rating        | NUMERIC(3,2) MAX 5 |
 
 #### User
 - id
