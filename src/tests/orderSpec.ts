@@ -21,10 +21,6 @@ const orderList: Order[] = [
 describe('Testing order model', () => {
   it('has a create method', () => {
     expect(orderStore.create).toBeDefined()
-  }) d
-
-  it('has a delete method', () => {
-    expect(orderStore.delete).toBeDefined()
   })
 
   it('has a current method', () => {

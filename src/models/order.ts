@@ -8,7 +8,6 @@ export type Order = {
 
 export class OrderStore {
   // TODO: create
-  // TODO: delete
   // TODO: active order per user
   // TODO: completed orders per user
 }
