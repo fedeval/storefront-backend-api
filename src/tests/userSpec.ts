@@ -25,17 +25,15 @@ const userList: User[] = [
     password: 'testpwd3'
   }
 ];
-const basePwdStrings = ['testpwd1', 'testpwd2', 'testpwd3'];
-const hashedPwdStrings = basePwdStrings.map((pwd) =>
-  bcrypt.hashSync(
-    pwd + process.env.PEPPER,
-    parseInt(process.env.SALT_ROUNDS as unknown as string)
-  )
-);
-const userListWithIdAndHashPwd = userList.map((user, index) => {
-  user.id = index + 1;
-  user.password = hashedPwdStrings[index];
-  return user;
+
+// Strip passwords to make test comparisons simpler
+const userListWithIdAndNoPwd = userList.map((user, index) => {
+  return {
+    id: index + 1,
+    username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName
+  };
 });
 
 describe('Testing user model', () => {
@@ -63,7 +61,10 @@ describe('Testing user model', () => {
 
   it('index should return a list of all users', async () => {
     const result = await store.index();
-    expect(result).toEqual(userListWithIdAndHashPwd);
+    const resultWithoutPwd = result.map((user, index) => {
+
+    })
+    expect(result).toEqual(userListWithIdAndNoPwd);
   });
 
   it('create should add a user', async () => {
