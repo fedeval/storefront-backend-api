@@ -1,6 +1,6 @@
 import { Product, ProductStore } from '../models/product';
 
-const store = new ProductStore()
+const store = new ProductStore();
 const productList: Product[] = [
   {
     name: 'bike',
@@ -44,30 +44,30 @@ const productList: Product[] = [
     category: 'household',
     rating: 4.2
   }
-]
+];
 
 describe('Testing Product model', () => {
   it('Has an index method', () => {
-    expect(store.index).toBeDefined()
-  })
+    expect(store.index).toBeDefined();
+  });
   it('Has a show method', () => {
-    expect(store.show).toBeDefined()
-  })
+    expect(store.show).toBeDefined();
+  });
   it('Has a create method', () => {
-    expect(store.create).toBeDefined()
-  })
+    expect(store.create).toBeDefined();
+  });
   it('Has a topfive method', () => {
-    expect(store.topfive).toBeDefined()
-  })
+    expect(store.topfive).toBeDefined();
+  });
 
   beforeAll(() => {
-    productList.forEach((product) => store.create(product))
-  })
+    productList.forEach((product) => store.create(product));
+  });
 
   it('index should return a list of all products', async () => {
-    const result = await store.index()
-    expect(result).toEqual(productList)
-  })
+    const result = await store.index();
+    expect(result).toEqual(productList);
+  });
 
   it('create should add a product', async () => {
     const result = await store.create({
@@ -75,40 +75,39 @@ describe('Testing Product model', () => {
       price: 9,
       category: 'office',
       rating: 4.2
-    })
+    });
     expect(result).toEqual({
       id: 8,
       name: 'notepad',
       price: 9,
       category: 'office',
       rating: 4.2
-    })
-  })
+    });
+  });
 
   it('show should return the product with the given id', async () => {
-    const result = await store.show(8)
+    const result = await store.show(8);
     expect(result).toEqual({
       id: 8,
       name: 'notepad',
       price: 9,
       category: 'office',
       rating: 4.2
-    })
-  })
+    });
+  });
 
   it('delete should remove the product with the given id', async () => {
-    await store.delete(8)
-    const result = await store.index()
+    await store.delete(8);
+    const result = await store.index();
     expect(result).not.toContain({
       id: 8,
       name: 'notepad',
       price: 9,
       category: 'office',
       rating: 4.2
-    })
-  })
+    });
+  });
 
   // TODO: test topfive
   // TODO: test category
-
-})
+});
