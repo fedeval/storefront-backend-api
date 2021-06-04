@@ -9,18 +9,24 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show : `'/products/:id' [GET]`
 - Create [token required] : `'/products' [POST]`
 - Delete [token required] : `'/products/:id' [DELETE]`
-- [OPTIONAL] Top 5 most popular products  : `'/products/topfive' [GET]`
-- [OPTIONAL] Products by category (args: product category) : `'/products?category=CATEGORY_NAME'[GET]`
 
 #### Users
 - Index [token required] : `'/users' [GET]`
 - Show [token required] : `'/users/:id' [GET]`
 - Create [token required] : `'/users' [POST]`
+- Authenticate [token required] : `'/users/auth' [GET]`
+- AddProductToOrder [token required]: `'/users/:id/orders/:orderId/products [POST]`
+- RemoveProductFromOrder [token required] `'/users/:id/orders/:orderId/products [DELETE]`
 
 #### Orders
-- Create [token required] : `'/orders/users/:userId' [POST]`
-- Current Order by user (args: user id)[token required] : `'orders/users/:userId/current' [GET]`
-- [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/users/:userId/completed' [GET]`
+- Create [token required] : `'/orders/:userId' [POST]`
+- UpdateOrderStatus [token required]: `'/orders/:id/users/:userId [PUT]`
+- Active Order by user (args: user id)[token required] : `'orders/:userId/active' [GET]`
+- [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/:userId/completed' [GET]`
+
+### Dashboard
+- [OPTIONAL] Top 5 most popular products  : `/top-five-products' [GET]`
+- [OPTIONAL] Products by category (args: product category) : `'/products-in-category'[GET]`
 
 ## Data Shapes
 #### Product
