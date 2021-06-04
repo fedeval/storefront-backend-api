@@ -18,10 +18,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Create [token required] : `'/users' [POST]`
 
 #### Orders
-- Index : `'/orders' [GET]`
-- Show : `'/orders/:id' [GET]`
-- Create [token required] : `'/orders' [POST]`
-- Delete [token required] : `'/orders/:id' [DELETE]`
+- Create [token required] : `'/orders/users/:userId' [POST]`
+- Delete [token required] : `'/orders/:id/users/:userId' [DELETE]`
 - Current Order by user (args: user id)[token required] : `'orders/users/:userId/current' [GET]`
 - [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/users/:userId/completed' [GET]`
 
