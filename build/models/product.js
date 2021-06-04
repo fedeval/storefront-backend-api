@@ -5,6 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductStore = void 0;
 const database_1 = __importDefault(require("../database"));
+const pg_1 = require("pg");
+// Parse numeric types as floats instead of strings
+pg_1.types.setTypeParser(1700, (value) => {
+    return parseFloat(value);
+});
 class ProductStore {
     // TODO: index action + category param (optional)
     async index() {
@@ -13,7 +18,6 @@ class ProductStore {
             const sql = 'SELECT * FROM products;';
             const result = await connection.query(sql);
             connection.release();
-            console.log(result.rows);
             return result.rows;
         }
         catch (err) {

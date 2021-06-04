@@ -1,4 +1,10 @@
 import Client from '../database';
+import { types } from 'pg';
+
+// Parse numeric types as floats instead of strings
+types.setTypeParser(1700, (value) => {
+  return parseFloat(value)
+})
 
 export type Product = {
   id?: number;
@@ -16,7 +22,6 @@ export class ProductStore {
       const sql = 'SELECT * FROM products;';
       const result = await connection.query(sql);
       connection.release();
-      console.log(result.rows)
       return result.rows;
     } catch (err) {
       throw new Error(`Cannot get products: ${err}`);
