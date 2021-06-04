@@ -67,8 +67,10 @@ describe('Testing Product model', () => {
   //   expect(store.topfive).toBeDefined();
   // });
 
-  beforeAll(() => {
-    productList.forEach((product) => store.create(product));
+  beforeAll(async () => {
+    for (const product of productList) {
+      await store.create(product)
+    };
   });
 
   it('index should return a list of all products', async () => {
