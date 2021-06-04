@@ -51,6 +51,9 @@ describe('Testing user model', () => {
     expect(store.authenticate).toBeDefined();
   });
 
+  // TODO: add addproducttoorder
+  // TODO: add removeproductfromorder
+
   beforeAll(async () => {
     for (const user of userList) {
       await store.create(user);
@@ -117,4 +120,7 @@ describe('Testing user model', () => {
     ]);
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
   });
+
+  // TODO: add addproducttoorder
+  // TODO: add removeproductfromorder
 });

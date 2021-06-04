@@ -112,4 +112,7 @@ export class UserStore {
       throw new Error(`Cannot authenticate user ${username}: ${err}`);
     }
   }
+
+  // TODO: add addproducttoorder
+  // TODO: add removeproductfromorder
 }

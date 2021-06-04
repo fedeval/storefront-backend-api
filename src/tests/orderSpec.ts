@@ -23,9 +23,14 @@ describe('Testing order model', () => {
     expect(orderStore.create).toBeDefined()
   })
 
-  it('has a current method', () => {
-    expect(orderStore.current).toBeDefined()
+  it('has a update method', () => {
+    expect(orderStore.update).toBeDefined()
   })
+
+  it('has an active method', () => {
+    expect(orderStore.active).toBeDefined()
+  })
+
 
   it('has a completed method', () => {
     expect(orderStore.completed).toBeDefined()
@@ -44,6 +49,7 @@ describe('Testing order model', () => {
   })
 
   // TODO: test create functionality
-  // TODO: test current functionality
+  // TODO: test update functionality
+  // TODO: test active functionality
   // TODO: test completed functionality
 })

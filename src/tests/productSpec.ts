@@ -67,10 +67,6 @@ describe('Testing Product model', () => {
     expect(store.delete).toBeDefined();
   });
 
-  // it('Has a topfive method', () => {
-  //   expect(store.topfive).toBeDefined();
-  // });
-
   beforeAll(async () => {
     for (const product of productList) {
       await store.create(product);
@@ -120,7 +116,4 @@ describe('Testing Product model', () => {
       rating: 4.2
     });
   });
-
-  // TODO: test topfive
-  // TODO: test category
 });
