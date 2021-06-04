@@ -14,13 +14,13 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Index [token required] : `'/users' [GET]`
 - Show [token required] : `'/users/:id' [GET]`
 - Create [token required] : `'/users' [POST]`
-- Authenticate [token required] : `'/users/auth' [GET]`
-- AddProductToOrder [token required]: `'/users/:id/orders/:orderId/products [POST]`
-- RemoveProductFromOrder [token required] `'/users/:id/orders/:orderId/products [DELETE]`
+- Authenticate (args: username, password) [token required] : `'/users/auth' [GET]`
+- AddProductToOrder (args: orderId, productId) [token required]: `'/users/:id/orders/:orderId/products [POST]`
+- RemoveProductFromOrder (args: orderId, productId) [token required] `'/users/:id/orders/:orderId/products [DELETE]`
 
 #### Orders
-- Create [token required] : `'/orders/:userId' [POST]`
-- UpdateOrderStatus [token required]: `'/orders/:id/users/:userId [PUT]`
+- Create (args: userId) [token required] : `'/orders/' [POST]`
+- UpdateStatus [token required]: `'/orders/:id' [PUT]`
 - Active Order by user (args: user id)[token required] : `'orders/:userId/active' [GET]`
 - [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/:userId/completed' [GET]`
 
