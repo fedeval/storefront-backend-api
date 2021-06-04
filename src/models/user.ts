@@ -2,6 +2,7 @@ import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { convertColNamesToUserProps } from '../utils/namingConventions';
+import { error } from 'console';
 
 dotenv.config();
 
@@ -114,5 +115,25 @@ export class UserStore {
   }
 
   // TODO: add addproducttoorder
+  async addProductToOrder(userId: number, productId: number, quantity: number) {
+    try {
+      const connection = await Client.connect()
+      const orderQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';"
+      const orderResult = await connection.query(orderQuery, [userId])
+      const orderId: number = orderResult.rows[0]
+      if (orderId) {
+        const addProductQuery = 'INSERT INTO order_details (product_id, quantity, order_id) VALUES ($1, $2, $3) RETURNING *;'
+        const result = await connection.query(addProductQuery, [productId, quantity, orderId])
+        const orderDetails = result.rows[0]
+        connection.release()
+        return orderDetails
+      } else {
+        connection.release()
+        throw new Error('Cannot add product to a completed order');  
+      }      
+    } catch (err) {
+      throw new Error(`Cannot add product ${productId} to order: ${err}`);
+    }
+  }
   // TODO: add removeproductfromorder
 }
