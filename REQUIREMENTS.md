@@ -8,6 +8,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Index : `'/products' [GET]`
 - Show : `'/products/:id' [GET]`
 - Create [token required] : `'/products' [POST]`
+- Delete [token required] : `'/products/:id' [DELETE]`
 - [OPTIONAL] Top 5 most popular products  : `'/products/topfive' [GET]`
 - [OPTIONAL] Products by category (args: product category) : `'/products?category=CATEGORY_NAME'[GET]`
 
@@ -17,6 +18,10 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Create [token required] : `'/users' [POST]`
 
 #### Orders
+- Index : `'/orders' [GET]`
+- Show : `'/orders/:id' [GET]`
+- Create [token required] : `'/orders' [POST]`
+- Delete [token required] : `'/orders/:id' [DELETE]`
 - Current Order by user (args: user id)[token required] : `'orders/users/:userId/current' [GET]`
 - [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/users/:userId/completed' [GET]`
 
