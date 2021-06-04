@@ -13,6 +13,7 @@ class ProductStore {
             const sql = 'SELECT * FROM products;';
             const result = await connection.query(sql);
             connection.release();
+            console.log(result.rows);
             return result.rows;
         }
         catch (err) {

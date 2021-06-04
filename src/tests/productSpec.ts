@@ -6,45 +6,49 @@ const productList: Product[] = [
     name: 'bike',
     price: 150,
     category: 'sports',
-    rating: 4.3
+    rating: 4.35
   },
   {
     name: 'kayak',
     price: 600,
     category: 'sports',
-    rating: 4.6
+    rating: 4.60
   },
   {
     name: 'carpet',
     price: 40,
     category: 'household',
-    rating: 3.4
+    rating: 3.43
   },
   {
     name: 'desk',
     price: 200,
     category: 'office',
-    rating: 3.9
+    rating: 3.90
   },
   {
     name: 'pen',
     price: 2,
     category: 'office',
-    rating: 2.9
+    rating: 2.91
   },
   {
     name: 'laptop',
     price: 2000,
     category: 'office',
-    rating: 4.9
+    rating: 4.90
   },
   {
     name: 'chair',
     price: 40,
     category: 'household',
-    rating: 4.2
+    rating: 4.20
   }
 ];
+const prodListWithId = productList.map((product, index) => {
+  product.id = index + 1
+  return product
+})
 
 describe('Testing Product model', () => {
   it('Has an index method', () => {
@@ -69,7 +73,7 @@ describe('Testing Product model', () => {
 
   it('index should return a list of all products', async () => {
     const result = await store.index();
-    expect(result).toEqual(productList);
+    expect(result).toEqual(prodListWithId);
   });
 
   it('create should add a product', async () => {
@@ -77,14 +81,14 @@ describe('Testing Product model', () => {
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.2
+      rating: 4.20
     });
     expect(result).toEqual({
       id: 8,
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.2
+      rating: 4.20
     });
   });
 
@@ -95,7 +99,7 @@ describe('Testing Product model', () => {
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.2
+      rating: 4.20
     });
   });
 
@@ -107,7 +111,7 @@ describe('Testing Product model', () => {
       name: 'notepad',
       price: 9,
       category: 'office',
-      rating: 4.2
+      rating: 4.20
     });
   });
 
