@@ -1,6 +1,6 @@
 import { UserStore } from '../models/user';
-import { Product, ProductStore } from '../models/product';
-import { Order, OrderStore } from '../models/order';
+import { ProductStore } from '../models/product';
+import { OrderStore } from '../models/order';
 import { userList, userListWithIdAndNoPwd } from './helpers/userTestData';
 import { productList } from './helpers/productTestData';
 import { testOrder } from './helpers/orderTestData';
@@ -154,7 +154,7 @@ describe('User method to modify orders', () => {
       orderId: 1
     });
   });
-  // TODO: test removeproductfromorder functionality
+
   it('removeProductFromOrder returns the removed order details from an active order', async () => {
     const result = await store.removeProductFromOrder(1, 1);
     expect(result).toEqual({

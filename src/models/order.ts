@@ -8,7 +8,6 @@ export type Order = {
 };
 
 export class OrderStore {
-  // TODO: create
   async create(order: Order): Promise<Order> {
     try {
       const connection = await Client.connect();

@@ -116,7 +116,6 @@ export class UserStore {
     }
   }
 
-  // TODO: add addproducttoorder
   async addProductToOrder(
     userId: number,
     productId: number,
@@ -152,7 +151,7 @@ export class UserStore {
       throw new Error(`Cannot add product ${productId} to order: ${err}`);
     }
   }
-  // TODO: add removeproductfromorder
+
   async removeProductFromOrder(
     userId: number,
     productId: number
@@ -165,7 +164,7 @@ export class UserStore {
       const orderId: number = orderResult.rows[0].id;
       if (orderId) {
         const sql =
-        'DELETE FROM order_details WHERE order_id = ($1) AND product_id = ($2) RETURNING *;';
+          'DELETE FROM order_details WHERE order_id = ($1) AND product_id = ($2) RETURNING *;';
         const result = await connection.query(sql, [orderId, productId]);
         const { id, product_id, quantity, order_id } = result.rows[0];
         connection.release();
