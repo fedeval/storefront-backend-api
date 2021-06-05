@@ -138,7 +138,7 @@ export class UserStore {
         ]);
         const { id, product_id, quantity, order_id } = result.rows[0];
         connection.release();
-        return columnNamesToOrderDetails(id, product_id, quantity, order_id);
+        return columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
       } else {
         connection.release();
         throw new Error('Cannot add product to a completed order');
