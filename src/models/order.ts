@@ -11,19 +11,27 @@ export class OrderStore {
   async create(order: Order): Promise<Order> {
     try {
       const connection = await Client.connect();
-      const sql =
-        'INSERT INTO orders (user_id, current_status) VALUES ($1, $2) RETURNING *;';
-      const result = await connection.query(sql, [
-        order.userId,
-        order.currentStatus
-      ]);
-      const { id, user_id, current_status } = result.rows[0];
-      connection.release();
-      return columnNamesToOrderProps(id, Number(user_id), current_status);
+      const checkActiveQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';"
+      const checkActiveQueryRes = await connection.query(checkActiveQuery, [order.userId])
+      if (checkActiveQueryRes.rows[0]) {
+        connection.release()
+        throw new Error("an active order for this user already exists");
+      } else {
+        const sql =
+          'INSERT INTO orders (user_id, current_status) VALUES ($1, $2) RETURNING *;';
+        const result = await connection.query(sql, [
+          order.userId,
+          order.currentStatus
+        ]);
+        const { id, user_id, current_status } = result.rows[0];
+        connection.release();
+        return columnNamesToOrderProps(id, Number(user_id), current_status);
+      }
     } catch (err) {
       throw new Error(`Cannot create order: ${err}`);
     }
   }
+  // TODO: update order status
   // TODO: active order per user
   // TODO: completed orders per user
 }

@@ -76,7 +76,6 @@ class UserStore {
             throw new Error(`Cannot authenticate user ${username}: ${err}`);
         }
     }
-    // TODO: add addproducttoorder
     async addProductToOrder(userId, productId, quantityInput) {
         try {
             const connection = await database_1.default.connect();
@@ -103,7 +102,6 @@ class UserStore {
             throw new Error(`Cannot add product ${productId} to order: ${err}`);
         }
     }
-    // TODO: add removeproductfromorder
     async removeProductFromOrder(userId, productId) {
         try {
             const connection = await database_1.default.connect();

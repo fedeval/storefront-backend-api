@@ -135,7 +135,6 @@ describe('User method to modify orders', () => {
             orderId: 1
         });
     });
-    // TODO: test removeproductfromorder functionality
     it('removeProductFromOrder returns the removed order details from an active order', async () => {
         const result = await store.removeProductFromOrder(1, 1);
         expect(result).toEqual({
