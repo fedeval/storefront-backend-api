@@ -15,8 +15,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show [token required] : `'/users/:id' [GET]`
 - Create [token required] : `'/users' [POST]`
 - Authenticate (args: username, password) [token required] : `'/users/auth' [GET]`
-- AddProductToOrder (args: orderId, productId) [token required]: `'/users/:id/orders/:orderId/products [POST]`
-- RemoveProductFromOrder (args: orderId, productId) [token required] `'/users/:id/orders/:orderId/products [DELETE]`
+- AddProductToOrder (args: orderId, productId) [token required]: `'/users/:id/products/:productId/orders [POST]`
+- RemoveProductFromOrder (args: orderId, productId) [token required] `'/users/:id/products/:productId/orders [DELETE]`
 
 #### Orders
 - Create (args: userId) [token required] : `'/orders/' [POST]`
