@@ -28,7 +28,7 @@ class OrderStore {
             }
         }
         catch (err) {
-            throw new Error(`Cannot create order: ${err}`);
+            throw new Error(`Cannot create order: ${err.message}`);
         }
     }
 }

@@ -40,6 +40,16 @@ describe('Order model method', () => {
             currentStatus: 'active'
         });
     });
+    it('create should throw an error if an active order already exist with the same user id', async () => {
+        let error;
+        try {
+            const result = await orderStore.create(1);
+        }
+        catch (err) {
+            error = err.message;
+        }
+        expect(error).toEqual('Cannot  order: an active order for this user already exists');
+    });
     // TODO: test update functionality
     // TODO: test active functionality
     // TODO: test completed functionality

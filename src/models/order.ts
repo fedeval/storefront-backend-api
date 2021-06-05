@@ -28,7 +28,7 @@ export class OrderStore {
         return columnNamesToOrderProps(id, Number(user_id), current_status);
       }
     } catch (err) {
-      throw new Error(`Cannot create order: ${err}`);
+      throw new Error(`Cannot create order: ${err.message}`);
     }
   }
   // TODO: update order status
