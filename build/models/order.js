@@ -54,5 +54,18 @@ class OrderStore {
             throw new Error(`Cannot create order: ${err.message}`);
         }
     }
+    async getActiveOrder(userId) {
+        try {
+            const connection = await database_1.default.connect();
+            const sql = "SELECT * FROM orders WHERE user_id = ($1) AND current_status = 'active'";
+            const result = await connection.query(sql, [userId]);
+            const { id, user_id, current_status } = result.rows[0];
+            connection.release();
+            return namingConventions_1.columnNamesToOrderProps(id, Number(user_id), current_status);
+        }
+        catch (err) {
+            throw new Error(`Cannot retrieve active order: ${err}`);
+        }
+    }
 }
 exports.OrderStore = OrderStore;

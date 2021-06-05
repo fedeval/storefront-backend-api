@@ -56,6 +56,19 @@ export class OrderStore {
       throw new Error(`Cannot create order: ${err.message}`);
     }
   }
-  // TODO: active order per user
+
+  async getActiveOrder(userId: number): Promise<Order> {
+    try {
+      const connection = await Client.connect();
+      const sql =
+        "SELECT * FROM orders WHERE user_id = ($1) AND current_status = 'active'";
+      const result = await connection.query(sql, [userId]);
+      const { id, user_id, current_status } = result.rows[0];
+      connection.release();
+      return columnNamesToOrderProps(id, Number(user_id), current_status);
+    } catch (err) {
+      throw new Error(`Cannot retrieve active order: ${err}`);
+    }
+  }
   // TODO: completed orders per user
 }

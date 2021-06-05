@@ -16,13 +16,10 @@ describe('Order model', () => {
     it('has a updateStatus method', () => {
         expect(orderStore.updateStatus).toBeDefined();
     });
+    it('has a getActiveOrder method', () => {
+        expect(orderStore.getActiveOrder).toBeDefined();
+    });
     /*
-  
-    it('has an active method', () => {
-      expect(orderStore.active).toBeDefined()
-    })
-  
-  
     it('has a completed method', () => {
       expect(orderStore.completed).toBeDefined()
     })
@@ -68,7 +65,15 @@ describe('Order model method', () => {
         }
         expect(error).toEqual('Cannot create order: there are no active orders for user 1');
     });
-    // TODO: test active functionality
+    it('getActiveOrder should return an active order for the user, if it exists', async () => {
+        await orderStore.create(1);
+        const result = await orderStore.getActiveOrder(1);
+        expect(result).toEqual({
+            id: 2,
+            userId: 1,
+            currentStatus: 'active'
+        });
+    });
     // TODO: test completed functionality
     afterAll(async () => {
         const connection = await database_1.default.connect();
