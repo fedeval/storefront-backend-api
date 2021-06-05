@@ -7,11 +7,11 @@ exports.OrderStore = void 0;
 const database_1 = __importDefault(require("../database"));
 const namingConventions_1 = require("../utils/namingConventions");
 class OrderStore {
-    async create(order) {
+    async create(userId) {
         try {
             const connection = await database_1.default.connect();
             const checkActiveQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
-            const checkActiveQueryRes = await connection.query(checkActiveQuery, [order.userId]);
+            const checkActiveQueryRes = await connection.query(checkActiveQuery, [userId]);
             if (checkActiveQueryRes.rows[0]) {
                 connection.release();
                 throw new Error("an active order for this user already exists");
@@ -19,8 +19,8 @@ class OrderStore {
             else {
                 const sql = 'INSERT INTO orders (user_id, current_status) VALUES ($1, $2) RETURNING *;';
                 const result = await connection.query(sql, [
-                    order.userId,
-                    order.currentStatus
+                    userId,
+                    'active'
                 ]);
                 const { id, user_id, current_status } = result.rows[0];
                 connection.release();

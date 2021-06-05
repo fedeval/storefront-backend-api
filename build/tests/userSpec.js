@@ -8,7 +8,6 @@ const product_1 = require("../models/product");
 const order_1 = require("../models/order");
 const userTestData_1 = require("./helpers/userTestData");
 const productTestData_1 = require("./helpers/productTestData");
-const orderTestData_1 = require("./helpers/orderTestData");
 const database_1 = __importDefault(require("../database"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -124,7 +123,7 @@ describe('User method to modify orders', () => {
     beforeAll(async () => {
         await store.create(testUser);
         await productStore.create(testProduct);
-        await orderStore.create(orderTestData_1.testOrder);
+        await orderStore.create(1);
     });
     it('addProductToOrder adds a product to an active order', async () => {
         const result = await store.addProductToOrder(1, 1, 10);

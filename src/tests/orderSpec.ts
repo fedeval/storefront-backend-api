@@ -33,7 +33,7 @@ describe('Order model method', () => {
   });
 
   it('create should add an order', async () => {
-    const result = await orderStore.create(testOrder);
+    const result = await orderStore.create(1);
     expect(result).toEqual({
       id: 1,
       userId: 1,

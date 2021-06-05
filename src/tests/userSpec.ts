@@ -142,7 +142,7 @@ describe('User method to modify orders', () => {
   beforeAll(async () => {
     await store.create(testUser);
     await productStore.create(testProduct);
-    await orderStore.create(testOrder);
+    await orderStore.create(1);
   });
 
   it('addProductToOrder adds a product to an active order', async () => {
