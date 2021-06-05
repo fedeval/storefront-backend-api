@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = require("../models/user");
+// import { Product, ProductStore } from '../models/product';
+// import { Order, OrderStore } from '../models/order';
 const userTestData_1 = require("./helpers/userTestData");
 const database_1 = __importDefault(require("../database"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -62,6 +64,7 @@ describe('User model method', () => {
             firstName: 'Roger',
             lastName: 'Taylor'
         });
+        expect(typeof result).toBe('User');
     });
     it('show should return the user with the given id', async () => {
         const result = await store.show(4);

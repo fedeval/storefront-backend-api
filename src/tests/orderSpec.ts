@@ -1,5 +1,5 @@
 import { Order, OrderStore } from '../models/order';
-import { User, UserStore } from '../models/user';
+import { UserStore } from '../models/user';
 import { userList } from './helpers/userTestData';
 import Client from '../database';
 

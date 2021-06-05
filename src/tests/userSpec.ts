@@ -1,6 +1,6 @@
-import { User, UserStore } from '../models/user';
-import { Product, ProductStore } from '../models/product';
-import { Order, OrderStore } from '../models/order';
+import { UserStore } from '../models/user';
+// import { Product, ProductStore } from '../models/product';
+// import { Order, OrderStore } from '../models/order';
 import { userList, userListWithIdAndNoPwd } from './helpers/userTestData'
 import Client from '../database'
 import dotenv from 'dotenv';
