@@ -1,6 +1,6 @@
 import { Order } from '../models/order';
 import { User } from '../models/user';
-
+import { OrderDetails } from '../utils/customTypes'
 /* 
 SQL and JS have different naming conventions:
 - lower_snake_case: SQL columns
@@ -30,7 +30,7 @@ export const columnNamesToOrderDetails = (
   product_id: number,
   quantity: number,
   order_id: number
-) => {
+): OrderDetails => {
   return {
     id: id,
     productId: product_id,

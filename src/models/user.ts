@@ -1,6 +1,7 @@
 import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { OrderDetails } from '../utils/customTypes';
 import {
   columnNamesToUserProps,
   columnNamesToOrderDetails
