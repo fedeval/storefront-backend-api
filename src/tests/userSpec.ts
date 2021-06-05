@@ -133,7 +133,7 @@ describe('User can modify orders', () => {
   });
 });
 
-describe('User method do modify orders', () => {
+describe('User method to modify orders', () => {
   const productStore = new ProductStore();
   const orderStore = new OrderStore();
   const testUser = userList[0];
