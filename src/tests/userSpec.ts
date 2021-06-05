@@ -130,7 +130,7 @@ describe('User can modify orders', () => {
 
   it('with a removeProductFromOrder method', () => {
     expect(store.removeProductFromOrder).toBeDefined();
-  })
+  });
 });
 
 describe('User method do modify orders', () => {
@@ -138,34 +138,34 @@ describe('User method do modify orders', () => {
   const orderStore = new OrderStore();
   const testUser = userList[0];
   const testProduct = productList[0];
-  
+
   beforeAll(async () => {
     await store.create(testUser);
     await productStore.create(testProduct);
     await orderStore.create(testOrder);
   });
-  
-  it('addProductToOrder adds a product to an active order', async() => {
-    const result = await store.addProductToOrder(1, 1, 10)
+
+  it('addProductToOrder adds a product to an active order', async () => {
+    const result = await store.addProductToOrder(1, 1, 10);
     expect(result).toEqual({
       id: 1,
       productId: 1,
       quantity: 10,
       orderId: 1
-    })
-  })
+    });
+  });
   // TODO: test removeproductfromorder functionality
   it('removeProductFromOrder returns the removed order details from an active order', async () => {
-    const result = await store.removeProductFromOrder(1,1)
+    const result = await store.removeProductFromOrder(1, 1);
     expect(result).toEqual({
       id: 1,
       productId: 1,
       quantity: 10,
       orderId: 1
-    })
-  })
+    });
+  });
 
-  afterAll(async() => {
+  afterAll(async () => {
     const connection = await Client.connect();
     await connection.query('DELETE FROM users;');
     await connection.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;');
@@ -174,7 +174,9 @@ describe('User method do modify orders', () => {
     await connection.query('DELETE FROM products;');
     await connection.query('ALTER SEQUENCE products_id_seq RESTART WITH 1;');
     await connection.query('DELETE FROM order_details;');
-    await connection.query('ALTER SEQUENCE order_details_id_seq RESTART WITH 1;');
+    await connection.query(
+      'ALTER SEQUENCE order_details_id_seq RESTART WITH 1;'
+    );
     connection.release();
-  })
-})
+  });
+});

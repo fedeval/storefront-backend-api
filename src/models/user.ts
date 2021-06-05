@@ -121,7 +121,7 @@ export class UserStore {
     userId: number,
     productId: number,
     quantityInput: number
-  ): Promise <OrderDetails | undefined> {
+  ): Promise<OrderDetails | undefined> {
     try {
       const connection = await Client.connect();
       const orderQuery =
@@ -138,7 +138,12 @@ export class UserStore {
         ]);
         const { id, product_id, quantity, order_id } = result.rows[0];
         connection.release();
-        return columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
+        return columnNamesToOrderDetails(
+          id,
+          Number(product_id),
+          quantity,
+          Number(order_id)
+        );
       } else {
         connection.release();
         console.error(`There are no active orders for user ${userId}`);
@@ -148,25 +153,36 @@ export class UserStore {
     }
   }
   // TODO: add removeproductfromorder
-  async removeProductFromOrder(userId: number, productId: number): Promise<OrderDetails | undefined> {
+  async removeProductFromOrder(
+    userId: number,
+    productId: number
+  ): Promise<OrderDetails | undefined> {
     try {
-      const connection = await Client.connect()
+      const connection = await Client.connect();
       const orderQuery =
         "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
       const orderResult = await connection.query(orderQuery, [userId]);
       const orderId: number = orderResult.rows[0].id;
       if (orderId) {
-        const sql = 'DELETE FROM order_details WHERE user_id = ($1) AND product_id = ($2);'
-        const result = await connection.query(sql, [userId, productId])
-        const { id, product_id, quantity, order_id } = result.rows[0]
-        connection.release()
-        return columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
+        const sql =
+          'DELETE FROM order_details WHERE user_id = ($1) AND product_id = ($2);';
+        const result = await connection.query(sql, [userId, productId]);
+        const { id, product_id, quantity, order_id } = result.rows[0];
+        connection.release();
+        return columnNamesToOrderDetails(
+          id,
+          Number(product_id),
+          quantity,
+          Number(order_id)
+        );
       } else {
-        connection.release()
-        console.error(`There are no active orders for user ${userId}`)
+        connection.release();
+        console.error(`There are no active orders for user ${userId}`);
       }
     } catch (err) {
-      throw new Error(`Could not delete product ${productId} from order: ${err}`);
+      throw new Error(
+        `Could not delete product ${productId} from order: ${err}`
+      );
     }
   }
 }
