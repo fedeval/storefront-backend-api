@@ -64,7 +64,6 @@ describe('User model method', () => {
             firstName: 'Roger',
             lastName: 'Taylor'
         });
-        expect(typeof result).toBe('User');
     });
     it('show should return the user with the given id', async () => {
         const result = await store.show(4);

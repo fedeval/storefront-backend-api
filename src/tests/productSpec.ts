@@ -24,19 +24,25 @@ describe('Product model', () => {
 
 describe('Product model method', () => {
   beforeAll(async () => {
-    const connection = await Client.connect()
-    const sql = 'INSERT INTO products (name, price, category, rating) VALUES ($1, $2, $3, $4);'
+    const connection = await Client.connect();
+    const sql =
+      'INSERT INTO products (name, price, category, rating) VALUES ($1, $2, $3, $4);';
     for (const product of productList) {
-      await connection.query(sql, [product.name, product.price, product.category, product.rating])
+      await connection.query(sql, [
+        product.name,
+        product.price,
+        product.category,
+        product.rating
+      ]);
     }
-    connection.release()
+    connection.release();
   });
-  
+
   it('index should return a list of all products', async () => {
     const result = await store.index();
     expect(result).toEqual(prodListWithId);
   });
-  
+
   it('create should add a product', async () => {
     const result = await store.create({
       name: 'notepad',
@@ -52,7 +58,7 @@ describe('Product model method', () => {
       rating: 4.2
     });
   });
-  
+
   it('show should return the product with the given id', async () => {
     const result = await store.show(8);
     expect(result).toEqual({
@@ -63,7 +69,7 @@ describe('Product model method', () => {
       rating: 4.2
     });
   });
-  
+
   it('delete should remove the product with the given id', async () => {
     await store.delete(8);
     const result = await store.index();
@@ -75,11 +81,11 @@ describe('Product model method', () => {
       rating: 4.2
     });
   });
-  
-  afterAll(async() => {
-    const connection = await Client.connect()
-    await connection.query('DELETE FROM products;')
-    await connection.query('ALTER SEQUENCE products_id_seq RESTART WITH 1;')
-    connection.release()
-  })
-})
+
+  afterAll(async () => {
+    const connection = await Client.connect();
+    await connection.query('DELETE FROM products;');
+    await connection.query('ALTER SEQUENCE products_id_seq RESTART WITH 1;');
+    connection.release();
+  });
+});

@@ -1,8 +1,8 @@
 import { UserStore } from '../models/user';
 // import { Product, ProductStore } from '../models/product';
 // import { Order, OrderStore } from '../models/order';
-import { userList, userListWithIdAndNoPwd } from './helpers/userTestData'
-import Client from '../database'
+import { userList, userListWithIdAndNoPwd } from './helpers/userTestData';
+import Client from '../database';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
@@ -28,25 +28,30 @@ describe('User model', () => {
   it('has an authenticate method', () => {
     expect(store.authenticate).toBeDefined();
   });
-
 });
 
 describe('User model method', () => {
   beforeAll(async () => {
-    const connection = await Client.connect()
-    const sql = 'INSERT INTO users (username, first_name, last_name, password) VALUES ($1, $2, $3, $4);'
-    
+    const connection = await Client.connect();
+    const sql =
+      'INSERT INTO users (username, first_name, last_name, password) VALUES ($1, $2, $3, $4);';
+
     for (const user of userList) {
       const hashedPassword = bcrypt.hashSync(
         user.password + PEPPER,
         parseInt(SALT_ROUNDS as unknown as string)
       );
-      await connection.query(sql,[user.username, user.firstName, user.lastName, hashedPassword]);
+      await connection.query(sql, [
+        user.username,
+        user.firstName,
+        user.lastName,
+        hashedPassword
+      ]);
     }
 
-    connection.release()
+    connection.release();
   });
-  
+
   it('index should return a list of all users', async () => {
     const result = await store.index();
     const resultWithoutPwd = result.map((user) => {
@@ -54,7 +59,7 @@ describe('User model method', () => {
     });
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd);
   });
-  
+
   it('create should add a user', async () => {
     const result = await store.create({
       username: 'testuser4',
@@ -75,7 +80,7 @@ describe('User model method', () => {
       lastName: 'Taylor'
     });
   });
-  
+
   it('show should return the user with the given id', async () => {
     const result = await store.show(4);
     const resultWithoutPwd = _.pick(result, [
@@ -91,12 +96,12 @@ describe('User model method', () => {
       lastName: 'Taylor'
     });
   });
-  
+
   it('authenticate should return null for the wrong user and password combination', async () => {
     const result = await store.authenticate('testuser1', 'testpwd2');
     expect(result).toBe(null);
   });
-  
+
   it('authenticate should return a user for the right user and password combination', async () => {
     const result = await store.authenticate('testuser1', 'testpwd1');
     const resultWithoutPwd = _.pick(result, [
@@ -108,14 +113,13 @@ describe('User model method', () => {
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
   });
 
-  afterAll(async() => {
-    const connection = await Client.connect()
-    await connection.query('DELETE FROM users;')
-    await connection.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;')
-    connection.release()
-  })
-})
-
+  afterAll(async () => {
+    const connection = await Client.connect();
+    await connection.query('DELETE FROM users;');
+    await connection.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;');
+    connection.release();
+  });
+});
 
 describe('User can modify orders', () => {
   // const testUser = userList[0];

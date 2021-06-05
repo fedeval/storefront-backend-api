@@ -1,5 +1,5 @@
-import { User, UserStore } from '../../models/user'
-import _ from 'lodash'
+import { User, UserStore } from '../../models/user';
+import _ from 'lodash';
 
 // Mock user data
 export const userList: User[] = [
