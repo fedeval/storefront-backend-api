@@ -1,7 +1,9 @@
 import { UserStore } from '../models/user';
-// import { Product, ProductStore } from '../models/product';
-// import { Order, OrderStore } from '../models/order';
+import { Product, ProductStore } from '../models/product';
+import { Order, OrderStore } from '../models/order';
 import { userList, userListWithIdAndNoPwd } from './helpers/userTestData';
+import { productList } from './helpers/productTestData';
+import { testOrder } from './helpers/orderTestData';
 import Client from '../database';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
@@ -122,33 +124,45 @@ describe('User model method', () => {
 });
 
 describe('User can modify orders', () => {
-  // const testUser = userList[0];
-  // const testProduct = {
-  //   name: 'notepad',
-  //   price: 9,
-  //   category: 'office',
-  //   rating: 4.2
-  // };
-  // const testOrder1 = {
-  //   userId: 1,
-  //   currentStatus: 'active'
-  // };
-  // const testOrder2 = {
-  //   userId: 1,
-  //   currentStatus: 'completed'
-  // };
-  // const productStore = new ProductStore();
-  // const orderStore = new OrderStore();
-
-  // beforeAll(async () => {
-  //   await store.create(testUser);
-  //   await productStore.create(testProduct);
-  // });
-
   it('with an addProductToOrder method', () => {
     expect(store.addProductToOrder).toBeDefined();
   });
   // TODO: test removeproductfromorder definition
-  // TODO: test addtoproductf unctionality
-  // TODO: test removeproductfromorder functionality
 });
+
+describe('User method do modify orders', () => {
+  const productStore = new ProductStore();
+  const orderStore = new OrderStore();
+  const testUser = userList[0];
+  const testProduct = productList[0];
+  
+  beforeAll(async () => {
+    await store.create(testUser);
+    await productStore.create(testProduct);
+    await orderStore.create(testOrder);
+  });
+  
+  // TODO: test addtoproduct unctionality
+  it('addProductToOrder adds a product to an active order', async() => {
+    const result = await store.addProductToOrder(1, 1, 10)
+    expect(result).toEqual({
+      id: 1,
+      productId: 1,
+      quantity: 10,
+      orderId: 1
+    })
+  })
+  // TODO: test removeproductfromorder functionality
+  afterAll(async() => {
+    const connection = await Client.connect();
+    await connection.query('DELETE FROM users;');
+    await connection.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;');
+    await connection.query('DELETE FROM orders;');
+    await connection.query('ALTER SEQUENCE orders_id_seq RESTART WITH 1;');
+    await connection.query('DELETE FROM products;');
+    await connection.query('ALTER SEQUENCE products_id_seq RESTART WITH 1;');
+    await connection.query('DELETE FROM order_details;');
+    await connection.query('ALTER SEQUENCE order_details_id_seq RESTART WITH 1;');
+    connection.release();
+  })
+})

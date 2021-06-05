@@ -26,7 +26,12 @@ describe('Product model method', () => {
         const connection = await database_1.default.connect();
         const sql = 'INSERT INTO products (name, price, category, rating) VALUES ($1, $2, $3, $4);';
         for (const product of productTestData_1.productList) {
-            await connection.query(sql, [product.name, product.price, product.category, product.rating]);
+            await connection.query(sql, [
+                product.name,
+                product.price,
+                product.category,
+                product.rating
+            ]);
         }
         connection.release();
     });

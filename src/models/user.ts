@@ -1,7 +1,6 @@
 import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { OrderDetails } from '../utils/customTypes';
 import {
   columnNamesToUserProps,
   columnNamesToOrderDetails
@@ -126,6 +125,7 @@ export class UserStore {
       const connection = await Client.connect();
       const orderQuery =
         "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
+      console.log(userId)
       const orderResult = await connection.query(orderQuery, [userId]);
       const orderId: number = orderResult.rows[0].id;
       if (orderId) {
@@ -141,7 +141,7 @@ export class UserStore {
         return columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
       } else {
         connection.release();
-        throw new Error('Cannot add product to a completed order');
+        throw new Error(`There are no active orders for user ${userId}`);
       }
     } catch (err) {
       throw new Error(`Cannot add product ${productId} to order: ${err}`);

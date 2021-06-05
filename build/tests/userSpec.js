@@ -4,9 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = require("../models/user");
-// import { Product, ProductStore } from '../models/product';
-// import { Order, OrderStore } from '../models/order';
+const product_1 = require("../models/product");
+const order_1 = require("../models/order");
 const userTestData_1 = require("./helpers/userTestData");
+const productTestData_1 = require("./helpers/productTestData");
+const orderTestData_1 = require("./helpers/orderTestData");
 const database_1 = __importDefault(require("../database"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -34,7 +36,12 @@ describe('User model method', () => {
         const sql = 'INSERT INTO users (username, first_name, last_name, password) VALUES ($1, $2, $3, $4);';
         for (const user of userTestData_1.userList) {
             const hashedPassword = bcrypt_1.default.hashSync(user.password + PEPPER, parseInt(SALT_ROUNDS));
-            await connection.query(sql, [user.username, user.firstName, user.lastName, hashedPassword]);
+            await connection.query(sql, [
+                user.username,
+                user.firstName,
+                user.lastName,
+                hashedPassword
+            ]);
         }
         connection.release();
     });
@@ -102,31 +109,42 @@ describe('User model method', () => {
     });
 });
 describe('User can modify orders', () => {
-    // const testUser = userList[0];
-    // const testProduct = {
-    //   name: 'notepad',
-    //   price: 9,
-    //   category: 'office',
-    //   rating: 4.2
-    // };
-    // const testOrder1 = {
-    //   userId: 1,
-    //   currentStatus: 'active'
-    // };
-    // const testOrder2 = {
-    //   userId: 1,
-    //   currentStatus: 'completed'
-    // };
-    // const productStore = new ProductStore();
-    // const orderStore = new OrderStore();
-    // beforeAll(async () => {
-    //   await store.create(testUser);
-    //   await productStore.create(testProduct);
-    // });
     it('with an addProductToOrder method', () => {
         expect(store.addProductToOrder).toBeDefined();
     });
     // TODO: test removeproductfromorder definition
-    // TODO: test addtoproductf unctionality
+});
+describe('User method do modify orders', () => {
+    const productStore = new product_1.ProductStore();
+    const orderStore = new order_1.OrderStore();
+    const testUser = userTestData_1.userList[0];
+    const testProduct = productTestData_1.productList[0];
+    beforeAll(async () => {
+        await store.create(testUser);
+        await productStore.create(testProduct);
+        await orderStore.create(orderTestData_1.testOrder);
+    });
+    // TODO: test addtoproduct unctionality
+    it('addProductToOrder adds a product to an active order', async () => {
+        const result = await store.addProductToOrder(1, 1, 10);
+        expect(result).toEqual({
+            id: 1,
+            productId: 1,
+            quantity: 10,
+            orderId: 1
+        });
+    });
     // TODO: test removeproductfromorder functionality
+    afterAll(async () => {
+        const connection = await database_1.default.connect();
+        await connection.query('DELETE FROM users;');
+        await connection.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;');
+        await connection.query('DELETE FROM orders;');
+        await connection.query('ALTER SEQUENCE orders_id_seq RESTART WITH 1;');
+        await connection.query('DELETE FROM products;');
+        await connection.query('ALTER SEQUENCE products_id_seq RESTART WITH 1;');
+        await connection.query('DELETE FROM order_details;');
+        await connection.query('ALTER SEQUENCE order_details_id_seq RESTART WITH 1;');
+        connection.release();
+    });
 });
