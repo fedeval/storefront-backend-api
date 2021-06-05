@@ -5,6 +5,7 @@ import {
   columnNamesToUserProps,
   columnNamesToOrderDetails
 } from '../utils/namingConventions';
+import { OrderDetails } from '../utils/customTypes';
 
 dotenv.config();
 const { PEPPER, SALT_ROUNDS } = process.env;
@@ -120,12 +121,11 @@ export class UserStore {
     userId: number,
     productId: number,
     quantityInput: number
-  ) {
+  ): Promise <OrderDetails | undefined> {
     try {
       const connection = await Client.connect();
       const orderQuery =
         "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
-      console.log(userId)
       const orderResult = await connection.query(orderQuery, [userId]);
       const orderId: number = orderResult.rows[0].id;
       if (orderId) {
@@ -141,11 +141,32 @@ export class UserStore {
         return columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
       } else {
         connection.release();
-        throw new Error(`There are no active orders for user ${userId}`);
+        console.error(`There are no active orders for user ${userId}`);
       }
     } catch (err) {
       throw new Error(`Cannot add product ${productId} to order: ${err}`);
     }
   }
   // TODO: add removeproductfromorder
+  async removeProductFromOrder(userId: number, productId: number): Promise<OrderDetails | undefined> {
+    try {
+      const connection = await Client.connect()
+      const orderQuery =
+        "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
+      const orderResult = await connection.query(orderQuery, [userId]);
+      const orderId: number = orderResult.rows[0].id;
+      if (orderId) {
+        const sql = 'DELETE FROM order_details WHERE user_id = ($1) AND product_id = ($2);'
+        const result = await connection.query(sql, [userId, productId])
+        const { id, product_id, quantity, order_id } = result.rows[0]
+        connection.release()
+        return columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
+      } else {
+        connection.release()
+        console.error(`There are no active orders for user ${userId}`)
+      }
+    } catch (err) {
+      throw new Error(`Could not delete product ${productId} from order: ${err}`);
+    }
+  }
 }
