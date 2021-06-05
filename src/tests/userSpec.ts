@@ -3,7 +3,6 @@ import { ProductStore } from '../models/product';
 import { OrderStore } from '../models/order';
 import { userList, userListWithIdAndNoPwd } from './helpers/userTestData';
 import { productList } from './helpers/productTestData';
-import { testOrder } from './helpers/orderTestData';
 import Client from '../database';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';

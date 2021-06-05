@@ -1,6 +1,5 @@
 import { OrderStore } from '../models/order';
 import { UserStore } from '../models/user';
-import { testOrder } from './helpers/orderTestData';
 import { userList } from './helpers/userTestData';
 import Client from '../database';
 
@@ -11,10 +10,11 @@ describe('Order model', () => {
   it('has a create method', () => {
     expect(orderStore.create).toBeDefined();
   });
+
+  it('has a updateStatus method', () => {
+    expect(orderStore.updateStatus).toBeDefined();
+  });
   /*
-  it('has a update method', () => {
-    expect(orderStore.update).toBeDefined()
-  })
 
   it('has an active method', () => {
     expect(orderStore.active).toBeDefined()
@@ -41,16 +41,38 @@ describe('Order model method', () => {
     });
   });
 
-  it('create should throw an error if an active order already exist with the same user id', async() => {
+  it('create should throw an error if an active order already exist with the same user id', async () => {
     let error;
     try {
-      const result = await orderStore.create(1)
+      await orderStore.create(1);
     } catch (err) {
-      error = err.message
+      error = err.message;
     }
-    expect(error).toEqual('Cannot create order: an active order for this user already exists')
-  })
-  // TODO: test update functionality
+    expect(error).toEqual(
+      'Cannot create order: an active order for this user already exists'
+    );
+  });
+
+  it('updateStatus should update an order to complete if an active order is present for given user id', async () => {
+    const result = await orderStore.updateStatus(1);
+    expect(result).toEqual({
+      id: 1,
+      userId: 1,
+      currentStatus: 'complete'
+    });
+  });
+
+  it('updateStatus should throw an error if there are no active orders for given user id', async () => {
+    let error;
+    try {
+      await orderStore.updateStatus(1);
+    } catch (err) {
+      error = err.message;
+    }
+    expect(error).toEqual(
+      'Cannot create order: there are no active orders for user 1'
+    );
+  });
   // TODO: test active functionality
   // TODO: test completed functionality
 
