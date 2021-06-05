@@ -48,6 +48,6 @@ export const columnNamesToOrderProps = (
     id: id,
     userId: user_id,
     currentStatus: current_status
-  } 
-  return order
-}
+  };
+  return order;
+};

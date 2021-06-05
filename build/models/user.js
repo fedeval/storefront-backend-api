@@ -11,23 +11,20 @@ const namingConventions_1 = require("../utils/namingConventions");
 dotenv_1.default.config();
 const { PEPPER, SALT_ROUNDS } = process.env;
 class UserStore {
-    // TODO: index
     async index() {
         try {
             const connection = await database_1.default.connect();
             const sql = 'SELECT * FROM users;';
             const result = await connection.query(sql);
             connection.release();
-            console.log(typeof result.rows[0]);
             return result.rows.map((dbData) => {
-                return namingConventions_1.convertColNamesToUserProps(dbData.id, dbData.username, dbData.first_name, dbData.last_name, dbData.password);
+                return namingConventions_1.columnNamesToUserProps(dbData.id, dbData.username, dbData.first_name, dbData.last_name, dbData.password);
             });
         }
         catch (err) {
             throw new Error(`Cannot get users: ${err}`);
         }
     }
-    // TODO: show
     async show(userId) {
         try {
             const connection = await database_1.default.connect();
@@ -35,13 +32,12 @@ class UserStore {
             const result = await connection.query(sql, [userId]);
             const { id, username, first_name, last_name, password } = result.rows[0];
             connection.release();
-            return namingConventions_1.convertColNamesToUserProps(id, username, first_name, last_name, password);
+            return namingConventions_1.columnNamesToUserProps(id, username, first_name, last_name, password);
         }
         catch (err) {
             throw new Error(`Cannot get user: ${err}`);
         }
     }
-    // TODO: create
     async create(user) {
         try {
             const connection = await database_1.default.connect();
@@ -55,13 +51,12 @@ class UserStore {
             ]);
             const { id, username, first_name, last_name, password } = result.rows[0];
             connection.release();
-            return namingConventions_1.convertColNamesToUserProps(id, username, first_name, last_name, password);
+            return namingConventions_1.columnNamesToUserProps(id, username, first_name, last_name, password);
         }
         catch (err) {
             throw new Error(`Cannot create user ${user.username}: ${err}`);
         }
     }
-    // TODO: authenticate
     async authenticate(username, pwdString) {
         try {
             const connection = await database_1.default.connect();
@@ -70,7 +65,7 @@ class UserStore {
             let auth = null;
             if (result.rows.length) {
                 const { id, username, first_name, last_name, password } = result.rows[0];
-                const user = namingConventions_1.convertColNamesToUserProps(id, username, first_name, last_name, password);
+                const user = namingConventions_1.columnNamesToUserProps(id, username, first_name, last_name, password);
                 if (bcrypt_1.default.compareSync(pwdString + PEPPER, user.password)) {
                     auth = user;
                 }
@@ -79,6 +74,33 @@ class UserStore {
         }
         catch (err) {
             throw new Error(`Cannot authenticate user ${username}: ${err}`);
+        }
+    }
+    // TODO: add addproducttoorder
+    async addProductToOrder(userId, productId, quantityInput) {
+        try {
+            const connection = await database_1.default.connect();
+            const orderQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
+            const orderResult = await connection.query(orderQuery, [userId]);
+            const orderId = orderResult.rows[0].id;
+            if (orderId) {
+                const addProductQuery = 'INSERT INTO order_details (product_id, quantity, order_id) VALUES ($1, $2, $3) RETURNING *;';
+                const result = await connection.query(addProductQuery, [
+                    productId,
+                    quantityInput,
+                    orderId
+                ]);
+                const { id, product_id, quantity, order_id } = result.rows[0];
+                connection.release();
+                return namingConventions_1.columnNamesToOrderDetails(id, product_id, quantity, order_id);
+            }
+            else {
+                connection.release();
+                throw new Error('Cannot add product to a completed order');
+            }
+        }
+        catch (err) {
+            throw new Error(`Cannot add product ${productId} to order: ${err}`);
         }
     }
 }
