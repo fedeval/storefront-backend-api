@@ -67,5 +67,22 @@ class OrderStore {
             throw new Error(`Cannot retrieve active order: ${err}`);
         }
     }
+    // TODO: completed orders per user
+    async getCompletedOrders(userId) {
+        try {
+            const connection = await database_1.default.connect();
+            const sql = "SELECT * FROM orders WHERE user_id = ($1) AND current_status = 'complete'";
+            const result = await connection.query(sql, [userId]);
+            const orderList = result.rows.map((order) => {
+                const { id, user_id, current_status } = order;
+                return namingConventions_1.columnNamesToOrderProps(id, Number(user_id), current_status);
+            });
+            connection.release();
+            return orderList;
+        }
+        catch (err) {
+            throw new Error(`Cannot retrieve completed orders: ${err}`);
+        }
+    }
 }
 exports.OrderStore = OrderStore;

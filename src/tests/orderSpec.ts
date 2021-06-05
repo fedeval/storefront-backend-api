@@ -18,11 +18,10 @@ describe('Order model', () => {
   it('has a getActiveOrder method', () => {
     expect(orderStore.getActiveOrder).toBeDefined();
   });
-  /*
-  it('has a completed method', () => {
-    expect(orderStore.completed).toBeDefined()
-  })
-  */
+
+  it('has a getCompletedOrders method', () => {
+    expect(orderStore.getCompletedOrders).toBeDefined();
+  });
 });
 
 describe('Order model method', () => {
@@ -81,7 +80,32 @@ describe('Order model method', () => {
       currentStatus: 'active'
     });
   });
-  // TODO: test completed functionality
+
+  it('getCompletedOrders should return a all completed orders for user', async () => {
+    let result = await orderStore.getCompletedOrders(1);
+    expect(result).toEqual([
+      {
+        id: 1,
+        userId: 1,
+        currentStatus: 'complete'
+      }
+    ]);
+
+    await orderStore.updateStatus(1);
+    result = await orderStore.getCompletedOrders(1);
+    expect(result).toEqual([
+      {
+        id: 1,
+        userId: 1,
+        currentStatus: 'complete'
+      },
+      {
+        id: 2,
+        userId: 1,
+        currentStatus: 'complete'
+      }
+    ]);
+  });
 
   afterAll(async () => {
     const connection = await Client.connect();

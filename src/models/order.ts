@@ -71,4 +71,20 @@ export class OrderStore {
     }
   }
   // TODO: completed orders per user
+  async getCompletedOrders(userId: number): Promise<Order[]> {
+    try {
+      const connection = await Client.connect();
+      const sql =
+        "SELECT * FROM orders WHERE user_id = ($1) AND current_status = 'complete'";
+      const result = await connection.query(sql, [userId]);
+      const orderList: Order[] = result.rows.map((order) => {
+        const { id, user_id, current_status } = order;
+        return columnNamesToOrderProps(id, Number(user_id), current_status);
+      });
+      connection.release();
+      return orderList;
+    } catch (err) {
+      throw new Error(`Cannot retrieve completed orders: ${err}`);
+    }
+  }
 }
