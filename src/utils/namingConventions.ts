@@ -1,3 +1,4 @@
+import { Order } from '../models/order';
 import { User } from '../models/user';
 
 /* 
@@ -37,3 +38,16 @@ export const columnNamesToOrderDetails = (
     orderId: order_id
   };
 };
+
+export const columnNamesToOrderProps = (
+  id: number,
+  user_id: number,
+  current_status: string
+): Order => {
+  const order: Order = {
+    id: id,
+    userId: user_id,
+    currentStatus: current_status
+  } 
+  return order
+}
