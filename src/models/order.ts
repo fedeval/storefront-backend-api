@@ -70,7 +70,7 @@ export class OrderStore {
       throw new Error(`Cannot retrieve active order: ${err}`);
     }
   }
-  // TODO: completed orders per user
+
   async getCompletedOrders(userId: number): Promise<Order[]> {
     try {
       const connection = await Client.connect();

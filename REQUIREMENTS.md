@@ -21,8 +21,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Orders
 - Create (args: userId) [token required] : `'/orders/' [POST]`
 - UpdateStatus [token required]: `'/orders/:id' [PUT]`
-- Active Order by user (args: user id)[token required] : `'orders/:userId/active' [GET]`
-- [OPTIONAL] Completed Orders by user (args: user id)[token required] `'orders/:userId/completed' [GET]`
+- Active Order by user (args: user id)[token required] : `'orders/users/:userId/active' [GET]`
+- Completed Orders by user (args: user id)[token required] `'orders/users/:userId/completed' [GET]`
 
 ### Dashboard
 - [OPTIONAL] Top 5 most popular products  : `/top-five-products' [GET]`
@@ -33,7 +33,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id
 - name
 - price
-- [OPTIONAL] category
+- category
 - rating
 
 | Column        | Type               |
