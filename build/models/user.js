@@ -81,7 +81,6 @@ class UserStore {
         try {
             const connection = await database_1.default.connect();
             const orderQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
-            console.log(userId);
             const orderResult = await connection.query(orderQuery, [userId]);
             const orderId = orderResult.rows[0].id;
             if (orderId) {
@@ -97,11 +96,34 @@ class UserStore {
             }
             else {
                 connection.release();
-                throw new Error(`There are no active orders for user ${userId}`);
+                console.error(`There are no active orders for user ${userId}`);
             }
         }
         catch (err) {
             throw new Error(`Cannot add product ${productId} to order: ${err}`);
+        }
+    }
+    // TODO: add removeproductfromorder
+    async removeProductFromOrder(userId, productId) {
+        try {
+            const connection = await database_1.default.connect();
+            const orderQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
+            const orderResult = await connection.query(orderQuery, [userId]);
+            const orderId = orderResult.rows[0].id;
+            if (orderId) {
+                const sql = 'DELETE FROM order_details WHERE user_id = ($1) AND product_id = ($2);';
+                const result = await connection.query(sql, [userId, productId]);
+                const { id, product_id, quantity, order_id } = result.rows[0];
+                connection.release();
+                return namingConventions_1.columnNamesToOrderDetails(id, Number(product_id), quantity, Number(order_id));
+            }
+            else {
+                connection.release();
+                console.error(`There are no active orders for user ${userId}`);
+            }
+        }
+        catch (err) {
+            throw new Error(`Could not delete product ${productId} from order: ${err}`);
         }
     }
 }

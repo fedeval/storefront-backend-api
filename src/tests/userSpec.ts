@@ -127,7 +127,10 @@ describe('User can modify orders', () => {
   it('with an addProductToOrder method', () => {
     expect(store.addProductToOrder).toBeDefined();
   });
-  // TODO: test removeproductfromorder definition
+
+  it('with a removeProductFromOrder method', () => {
+    expect(store.removeProductFromOrder).toBeDefined();
+  })
 });
 
 describe('User method do modify orders', () => {
@@ -142,7 +145,6 @@ describe('User method do modify orders', () => {
     await orderStore.create(testOrder);
   });
   
-  // TODO: test addtoproduct unctionality
   it('addProductToOrder adds a product to an active order', async() => {
     const result = await store.addProductToOrder(1, 1, 10)
     expect(result).toEqual({
@@ -153,6 +155,16 @@ describe('User method do modify orders', () => {
     })
   })
   // TODO: test removeproductfromorder functionality
+  it('removeProductFromOrder returns the removed order details from an active order', async () => {
+    const result = await store.removeProductFromOrder(1,1)
+    expect(result).toEqual({
+      id: 1,
+      productId: 1,
+      quantity: 10,
+      orderId: 1
+    })
+  })
+
   afterAll(async() => {
     const connection = await Client.connect();
     await connection.query('DELETE FROM users;');
