@@ -1,4 +1,4 @@
-import { User, UserStore } from '../../models/user';
+import { User } from '../../models/user';
 import _ from 'lodash';
 
 // Mock user data
