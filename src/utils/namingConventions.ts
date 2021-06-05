@@ -4,7 +4,7 @@ import { User } from '../models/user';
 SQL and JS have different naming conventions:
 - lower_snake_case: SQL columns
 - camelCase: JS object properties
-To avoid breaking conventions we can use this function to convert 
+To avoid breaking conventions we can use these functions to convert 
 from SQL naming to JS when importing data from the DB 
 */
 export const convertColNamesToUserProps = (
@@ -23,3 +23,17 @@ export const convertColNamesToUserProps = (
   };
   return user;
 };
+
+export const convertColNamesToOrderDetails = (
+  id: number,
+  product_id: number,
+  quantity: number,
+  order_id: number
+) => {
+  return {
+    id: id,
+    productId: product_id,
+    quantity: quantity,
+    orderId: order_id
+  }
+}
