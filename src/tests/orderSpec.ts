@@ -1,8 +1,8 @@
 import { Order, OrderStore } from '../models/order';
-import { User, UserStore } from '../models/user'
+import { User, UserStore } from '../models/user';
 
-const orderStore = new OrderStore()
-const userStore = new UserStore()
+const orderStore = new OrderStore();
+const userStore = new UserStore();
 const orderList: Order[] = [
   {
     userId: 1,
@@ -16,7 +16,7 @@ const orderList: Order[] = [
     userId: 1,
     currentStatus: 'completed'
   }
-]
+];
 /*
 describe('Testing order model', () => {
   it('has a create method', () => {

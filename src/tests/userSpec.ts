@@ -1,11 +1,13 @@
 import { User, UserStore } from '../models/user';
+import { Product, ProductStore } from '../models/product';
+import { Order, OrderStore } from '../models/order';
 import dotenv from 'dotenv';
 import _ from 'lodash';
 
 dotenv.config();
 
 const store = new UserStore();
-export const userList: User[] = [
+const userList: User[] = [
   {
     username: 'testuser1',
     firstName: 'Freddie',
@@ -50,9 +52,6 @@ describe('Testing user model', () => {
   it('has an authenticate method', () => {
     expect(store.authenticate).toBeDefined();
   });
-
-  // TODO: add addproducttoorder
-  // TODO: add removeproductfromorder
 
   beforeAll(async () => {
     for (const user of userList) {
@@ -120,7 +119,36 @@ describe('Testing user model', () => {
     ]);
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
   });
+});
 
-  // TODO: add addproducttoorder
-  // TODO: add removeproductfromorder
+describe('Testing user actions on orders', () => {
+  const testUser = userList[0];
+  const testProduct = {
+    name: 'notepad',
+    price: 9,
+    category: 'office',
+    rating: 4.2
+  };
+  const testOrder1 = {
+    userId: 1,
+    currentStatus: 'active'
+  };
+  const testOrder2 = {
+    userId: 1,
+    currentStatus: 'completed'
+  };
+  const productStore = new ProductStore();
+  const orderStore = new OrderStore();
+
+  beforeAll(async () => {
+    await store.create(testUser);
+    await productStore.create(testProduct);
+  });
+
+  it('has an addProductToOrder method', () => {
+    expect(store.addProductToOrder).toBeDefined();
+  });
+  // TODO: test removeproductfromorder definition
+  // TODO: test addtoproductf unctionality
+  // TODO: test removeproductfromorder functionality
 });

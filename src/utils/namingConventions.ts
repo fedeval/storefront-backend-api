@@ -7,7 +7,7 @@ SQL and JS have different naming conventions:
 To avoid breaking conventions we can use these functions to convert 
 from SQL naming to JS when importing data from the DB 
 */
-export const convertColNamesToUserProps = (
+export const columnNamesToUserProps = (
   id: number,
   username: string,
   first_name: string,
@@ -24,7 +24,7 @@ export const convertColNamesToUserProps = (
   return user;
 };
 
-export const convertColNamesToOrderDetails = (
+export const columnNamesToOrderDetails = (
   id: number,
   product_id: number,
   quantity: number,
@@ -35,5 +35,5 @@ export const convertColNamesToOrderDetails = (
     productId: product_id,
     quantity: quantity,
     orderId: order_id
-  }
-}
+  };
+};

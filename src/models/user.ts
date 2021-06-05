@@ -1,8 +1,10 @@
 import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { convertColNamesToUserProps } from '../utils/namingConventions';
-import { error } from 'console';
+import {
+  columnNamesToUserProps,
+  columnNamesToOrderDetails
+} from '../utils/namingConventions';
 
 dotenv.config();
 
@@ -24,7 +26,7 @@ export class UserStore {
       const result = await connection.query(sql);
       connection.release();
       return result.rows.map((dbData) => {
-        return convertColNamesToUserProps(
+        return columnNamesToUserProps(
           dbData.id,
           dbData.username,
           dbData.first_name,
@@ -44,7 +46,7 @@ export class UserStore {
       const result = await connection.query(sql, [userId]);
       const { id, username, first_name, last_name, password } = result.rows[0];
       connection.release();
-      return convertColNamesToUserProps(
+      return columnNamesToUserProps(
         id,
         username,
         first_name,
@@ -73,7 +75,7 @@ export class UserStore {
       ]);
       const { id, username, first_name, last_name, password } = result.rows[0];
       connection.release();
-      return convertColNamesToUserProps(
+      return columnNamesToUserProps(
         id,
         username,
         first_name,
@@ -97,7 +99,7 @@ export class UserStore {
       if (result.rows.length) {
         const { id, username, first_name, last_name, password } =
           result.rows[0];
-        const user: User = convertColNamesToUserProps(
+        const user: User = columnNamesToUserProps(
           id,
           username,
           first_name,
@@ -115,22 +117,32 @@ export class UserStore {
   }
 
   // TODO: add addproducttoorder
-  async addProductToOrder(userId: number, productId: number, quantity: number) {
+  async addProductToOrder(
+    userId: number,
+    productId: number,
+    quantityInput: number
+  ) {
     try {
-      const connection = await Client.connect()
-      const orderQuery = "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';"
-      const orderResult = await connection.query(orderQuery, [userId])
-      const orderId: number = orderResult.rows[0]
+      const connection = await Client.connect();
+      const orderQuery =
+        "SELECT id FROM orders WHERE user_id = ($1) AND current_status = 'active';";
+      const orderResult = await connection.query(orderQuery, [userId]);
+      const orderId: number = orderResult.rows[0].id;
       if (orderId) {
-        const addProductQuery = 'INSERT INTO order_details (product_id, quantity, order_id) VALUES ($1, $2, $3) RETURNING *;'
-        const result = await connection.query(addProductQuery, [productId, quantity, orderId])
-        const orderDetails = result.rows[0]
-        connection.release()
-        return orderDetails
+        const addProductQuery =
+          'INSERT INTO order_details (product_id, quantity, order_id) VALUES ($1, $2, $3) RETURNING *;';
+        const result = await connection.query(addProductQuery, [
+          productId,
+          quantityInput,
+          orderId
+        ]);
+        const { id, product_id, quantity, order_id } = result.rows[0];
+        connection.release();
+        return columnNamesToOrderDetails(id, product_id, quantity, order_id);
       } else {
-        connection.release()
-        throw new Error('Cannot add product to a completed order');  
-      }      
+        connection.release();
+        throw new Error('Cannot add product to a completed order');
+      }
     } catch (err) {
       throw new Error(`Cannot add product ${productId} to order: ${err}`);
     }
