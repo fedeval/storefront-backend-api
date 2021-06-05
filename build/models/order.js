@@ -12,7 +12,10 @@ class OrderStore {
         try {
             const connection = await database_1.default.connect();
             const sql = 'INSERT INTO orders (user_id, current_status) VALUES ($1, $2) RETURNING *;';
-            const result = await connection.query(sql, [order.userId, order.currentStatus]);
+            const result = await connection.query(sql, [
+                order.userId,
+                order.currentStatus
+            ]);
             const { id, order_id, current_status } = result.rows[0];
             connection.release();
             return namingConventions_1.columnNamesToOrderProps(id, order_id, current_status);

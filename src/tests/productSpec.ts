@@ -1,56 +1,10 @@
 import { Product, ProductStore } from '../models/product';
+import { productList, prodListWithId } from './helpers/createTestData';
+import Client from '../database';
 
 const store = new ProductStore();
-const productList: Product[] = [
-  {
-    name: 'bike',
-    price: 150,
-    category: 'sports',
-    rating: 4.35
-  },
-  {
-    name: 'kayak',
-    price: 600,
-    category: 'sports',
-    rating: 4.6
-  },
-  {
-    name: 'carpet',
-    price: 40,
-    category: 'household',
-    rating: 3.43
-  },
-  {
-    name: 'desk',
-    price: 200,
-    category: 'office',
-    rating: 3.9
-  },
-  {
-    name: 'pen',
-    price: 2,
-    category: 'office',
-    rating: 2.91
-  },
-  {
-    name: 'laptop',
-    price: 2000,
-    category: 'office',
-    rating: 4.9
-  },
-  {
-    name: 'chair',
-    price: 40,
-    category: 'household',
-    rating: 4.2
-  }
-];
-const prodListWithId = productList.map((product, index) => {
-  product.id = index + 1;
-  return product;
-});
 
-describe('Testing Product model', () => {
+describe('Product model', () => {
   it('has an index method', () => {
     expect(store.index).toBeDefined();
   });
@@ -66,18 +20,23 @@ describe('Testing Product model', () => {
   it('has a delete method', () => {
     expect(store.delete).toBeDefined();
   });
+});
 
+describe('Product model method', () => {
   beforeAll(async () => {
+    const connection = await Client.connect()
+    const sql = 'INSERT INTO products (name, price, category, rating) VALUES ($1, $2, $3, $4);'
     for (const product of productList) {
-      await store.create(product);
+      await connection.query(sql, [product.name, product.price, product.category, product.rating])
     }
+    connection.release()
   });
-
+  
   it('index should return a list of all products', async () => {
     const result = await store.index();
     expect(result).toEqual(prodListWithId);
   });
-
+  
   it('create should add a product', async () => {
     const result = await store.create({
       name: 'notepad',
@@ -93,7 +52,7 @@ describe('Testing Product model', () => {
       rating: 4.2
     });
   });
-
+  
   it('show should return the product with the given id', async () => {
     const result = await store.show(8);
     expect(result).toEqual({
@@ -104,7 +63,7 @@ describe('Testing Product model', () => {
       rating: 4.2
     });
   });
-
+  
   it('delete should remove the product with the given id', async () => {
     await store.delete(8);
     const result = await store.index();
@@ -116,4 +75,11 @@ describe('Testing Product model', () => {
       rating: 4.2
     });
   });
-});
+  
+  afterAll(async() => {
+    const connection = await Client.connect()
+    await connection.query('DELETE FROM products;')
+    await connection.query('ALTER SEQUENCE products_id_seq RESTART WITH 1;')
+    connection.release()
+  })
+})

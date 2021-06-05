@@ -9,35 +9,35 @@ const order_1 = require("../models/order");
 const dotenv_1 = __importDefault(require("dotenv"));
 const lodash_1 = __importDefault(require("lodash"));
 dotenv_1.default.config();
+const store = new user_1.UserStore();
+const userList = [
+    {
+        username: 'testuser1',
+        firstName: 'Freddie',
+        lastName: 'Mercury',
+        password: 'testpwd1'
+    },
+    {
+        username: 'testuser2',
+        firstName: 'Brian',
+        lastName: 'May',
+        password: 'testpwd2'
+    },
+    {
+        username: 'testuser3',
+        firstName: 'John',
+        lastName: 'Deacon',
+        password: 'testpwd3'
+    }
+];
+// Add ids and strip passwords to make test comparisons simpler
+const userListWithIdAndNoPwd = userList.map((user, index) => {
+    return {
+        id: index + 1,
+        ...lodash_1.default.pick(user, ['username', 'firstName', 'lastName'])
+    };
+});
 describe('Testing user model', () => {
-    const store = new user_1.UserStore();
-    const userList = [
-        {
-            username: 'testuser1',
-            firstName: 'Freddie',
-            lastName: 'Mercury',
-            password: 'testpwd1'
-        },
-        {
-            username: 'testuser2',
-            firstName: 'Brian',
-            lastName: 'May',
-            password: 'testpwd2'
-        },
-        {
-            username: 'testuser3',
-            firstName: 'John',
-            lastName: 'Deacon',
-            password: 'testpwd3'
-        }
-    ];
-    // Add ids and strip passwords to make test comparisons simpler
-    const userListWithIdAndNoPwd = userList.map((user, index) => {
-        return {
-            id: index + 1,
-            ...lodash_1.default.pick(user, ['username', 'firstName', 'lastName'])
-        };
-    });
     it('has an index method', () => {
         expect(store.index).toBeDefined();
     });
@@ -113,12 +113,7 @@ describe('Testing user model', () => {
     });
 });
 describe('Testing user actions on orders', () => {
-    const testUser = {
-        username: 'testuser1',
-        firstName: 'Freddie',
-        lastName: 'Mercury',
-        password: 'testpwd1'
-    };
+    const testUser = userList[0];
     const testProduct = {
         name: 'notepad',
         price: 9,
@@ -133,15 +128,14 @@ describe('Testing user actions on orders', () => {
         userId: 1,
         currentStatus: 'completed'
     };
-    const userStore = new user_1.UserStore();
     const productStore = new product_1.ProductStore();
     const orderStore = new order_1.OrderStore();
     beforeAll(async () => {
-        await userStore.create(testUser);
+        await store.create(testUser);
         await productStore.create(testProduct);
     });
     it('has an addProductToOrder method', () => {
-        expect(userStore.addProductToOrder).toBeDefined();
+        expect(store.addProductToOrder).toBeDefined();
     });
     // TODO: test removeproductfromorder definition
     // TODO: test addtoproductf unctionality
