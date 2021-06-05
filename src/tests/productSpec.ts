@@ -71,15 +71,17 @@ describe('Product model method', () => {
   });
 
   it('delete should remove the product with the given id', async () => {
-    await store.delete(8);
-    const result = await store.index();
-    expect(result).not.toContain({
+    const deletedProduct = await store.delete(8);
+    const products = await store.index();
+    console.log(products)
+    expect(deletedProduct).toEqual({
       id: 8,
       name: 'notepad',
       price: 9,
       category: 'office',
       rating: 4.2
-    });
+    })
+    expect(products).not.toContain(deletedProduct);
   });
 
   afterAll(async () => {

@@ -116,7 +116,7 @@ describe('User can modify orders', () => {
         expect(store.removeProductFromOrder).toBeDefined();
     });
 });
-describe('User method do modify orders', () => {
+describe('User method to modify orders', () => {
     const productStore = new product_1.ProductStore();
     const orderStore = new order_1.OrderStore();
     const testUser = userTestData_1.userList[0];
