@@ -16,9 +16,9 @@ class OrderStore {
                 order.userId,
                 order.currentStatus
             ]);
-            const { id, order_id, current_status } = result.rows[0];
+            const { id, user_id, current_status } = result.rows[0];
             connection.release();
-            return namingConventions_1.columnNamesToOrderProps(id, order_id, current_status);
+            return namingConventions_1.columnNamesToOrderProps(id, Number(user_id), current_status);
         }
         catch (err) {
             throw new Error(`Cannot create order: ${err}`);

@@ -1,42 +1,18 @@
 import { User, UserStore } from '../models/user';
 import { Product, ProductStore } from '../models/product';
 import { Order, OrderStore } from '../models/order';
+import { userList, userListWithIdAndNoPwd } from './helpers/userTestData'
+import Client from '../database'
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
 dotenv.config();
+const { PEPPER, SALT_ROUNDS } = process.env;
 
 const store = new UserStore();
-const userList: User[] = [
-  {
-    username: 'testuser1',
-    firstName: 'Freddie',
-    lastName: 'Mercury',
-    password: 'testpwd1'
-  },
-  {
-    username: 'testuser2',
-    firstName: 'Brian',
-    lastName: 'May',
-    password: 'testpwd2'
-  },
-  {
-    username: 'testuser3',
-    firstName: 'John',
-    lastName: 'Deacon',
-    password: 'testpwd3'
-  }
-];
 
-// Add ids and strip passwords to make test comparisons simpler
-const userListWithIdAndNoPwd = userList.map((user, index) => {
-  return {
-    id: index + 1,
-    ..._.pick(user, ['username', 'firstName', 'lastName'])
-  };
-});
-
-describe('Testing user model', () => {
+describe('User model', () => {
   it('has an index method', () => {
     expect(store.index).toBeDefined();
   });
@@ -53,12 +29,24 @@ describe('Testing user model', () => {
     expect(store.authenticate).toBeDefined();
   });
 
-  beforeAll(async () => {
-    for (const user of userList) {
-      await store.create(user);
-    }
-  });
+});
 
+describe('User model method', () => {
+  beforeAll(async () => {
+    const connection = await Client.connect()
+    const sql = 'INSERT INTO users (username, first_name, last_name, password) VALUES ($1, $2, $3, $4);'
+    
+    for (const user of userList) {
+      const hashedPassword = bcrypt.hashSync(
+        user.password + PEPPER,
+        parseInt(SALT_ROUNDS as unknown as string)
+      );
+      await connection.query(sql,[user.username, user.firstName, user.lastName, hashedPassword]);
+    }
+
+    connection.release()
+  });
+  
   it('index should return a list of all users', async () => {
     const result = await store.index();
     const resultWithoutPwd = result.map((user) => {
@@ -66,7 +54,7 @@ describe('Testing user model', () => {
     });
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd);
   });
-
+  
   it('create should add a user', async () => {
     const result = await store.create({
       username: 'testuser4',
@@ -87,7 +75,7 @@ describe('Testing user model', () => {
       lastName: 'Taylor'
     });
   });
-
+  
   it('show should return the user with the given id', async () => {
     const result = await store.show(4);
     const resultWithoutPwd = _.pick(result, [
@@ -103,12 +91,12 @@ describe('Testing user model', () => {
       lastName: 'Taylor'
     });
   });
-
+  
   it('authenticate should return null for the wrong user and password combination', async () => {
     const result = await store.authenticate('testuser1', 'testpwd2');
     expect(result).toBe(null);
   });
-
+  
   it('authenticate should return a user for the right user and password combination', async () => {
     const result = await store.authenticate('testuser1', 'testpwd1');
     const resultWithoutPwd = _.pick(result, [
@@ -119,33 +107,41 @@ describe('Testing user model', () => {
     ]);
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
   });
-});
 
-describe('Testing user actions on orders', () => {
-  const testUser = userList[0];
-  const testProduct = {
-    name: 'notepad',
-    price: 9,
-    category: 'office',
-    rating: 4.2
-  };
-  const testOrder1 = {
-    userId: 1,
-    currentStatus: 'active'
-  };
-  const testOrder2 = {
-    userId: 1,
-    currentStatus: 'completed'
-  };
-  const productStore = new ProductStore();
-  const orderStore = new OrderStore();
+  afterAll(async() => {
+    const connection = await Client.connect()
+    await connection.query('DELETE FROM users;')
+    await connection.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;')
+    connection.release()
+  })
+})
 
-  beforeAll(async () => {
-    await store.create(testUser);
-    await productStore.create(testProduct);
-  });
 
-  it('has an addProductToOrder method', () => {
+describe('User can modify orders', () => {
+  // const testUser = userList[0];
+  // const testProduct = {
+  //   name: 'notepad',
+  //   price: 9,
+  //   category: 'office',
+  //   rating: 4.2
+  // };
+  // const testOrder1 = {
+  //   userId: 1,
+  //   currentStatus: 'active'
+  // };
+  // const testOrder2 = {
+  //   userId: 1,
+  //   currentStatus: 'completed'
+  // };
+  // const productStore = new ProductStore();
+  // const orderStore = new OrderStore();
+
+  // beforeAll(async () => {
+  //   await store.create(testUser);
+  //   await productStore.create(testProduct);
+  // });
+
+  it('with an addProductToOrder method', () => {
     expect(store.addProductToOrder).toBeDefined();
   });
   // TODO: test removeproductfromorder definition

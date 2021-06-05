@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const product_1 = require("../models/product");
-const createTestData_1 = require("./helpers/createTestData");
+const productTestData_1 = require("./helpers/productTestData");
 const database_1 = __importDefault(require("../database"));
 const store = new product_1.ProductStore();
 describe('Product model', () => {
@@ -25,14 +25,14 @@ describe('Product model method', () => {
     beforeAll(async () => {
         const connection = await database_1.default.connect();
         const sql = 'INSERT INTO products (name, price, category, rating) VALUES ($1, $2, $3, $4);';
-        for (const product of createTestData_1.productList) {
+        for (const product of productTestData_1.productList) {
             await connection.query(sql, [product.name, product.price, product.category, product.rating]);
         }
         connection.release();
     });
     it('index should return a list of all products', async () => {
         const result = await store.index();
-        expect(result).toEqual(createTestData_1.prodListWithId);
+        expect(result).toEqual(productTestData_1.prodListWithId);
     });
     it('create should add a product', async () => {
         const result = await store.create({

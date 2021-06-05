@@ -7,7 +7,6 @@ import {
 } from '../utils/namingConventions';
 
 dotenv.config();
-
 const { PEPPER, SALT_ROUNDS } = process.env;
 
 export type User = {
