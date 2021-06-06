@@ -26,3 +26,4 @@ ordersController_1.orderRouter(app);
 app.listen(PORT, function () {
     console.log(`starting app on port ${PORT}`);
 });
+exports.default = app;
