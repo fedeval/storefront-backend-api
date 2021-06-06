@@ -1,7 +1,7 @@
-import { OrderStore } from '../models/order';
-import { UserStore } from '../models/user';
-import { userList } from './helpers/userTestData';
-import Client from '../database';
+import { OrderStore } from '../../models/order';
+import { UserStore } from '../../models/user';
+import { userList } from '../helpers/userTestData';
+import Client from '../../database';
 
 const orderStore = new OrderStore();
 const userStore = new UserStore();

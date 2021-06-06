@@ -1,6 +1,6 @@
-import { ProductStore } from '../models/product';
-import { productList, prodListWithId } from './helpers/productTestData';
-import Client from '../database';
+import { ProductStore } from '../../models/product';
+import { productList, prodListWithId } from '../helpers/productTestData';
+import Client from '../../database';
 
 const store = new ProductStore();
 

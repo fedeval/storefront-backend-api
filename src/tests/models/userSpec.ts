@@ -1,9 +1,9 @@
-import { UserStore } from '../models/user';
-import { ProductStore } from '../models/product';
-import { OrderStore } from '../models/order';
-import { userList, userListWithIdAndNoPwd } from './helpers/userTestData';
-import { productList } from './helpers/productTestData';
-import Client from '../database';
+import { UserStore } from '../../models/user';
+import { ProductStore } from '../../models/product';
+import { OrderStore } from '../../models/order';
+import { userList, userListWithIdAndNoPwd } from '../helpers/userTestData';
+import { productList } from '../helpers/productTestData';
+import Client from '../../database';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
