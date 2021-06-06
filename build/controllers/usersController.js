@@ -55,10 +55,36 @@ const authenticate = async (req, res) => {
         res.status(500).send(`${err.message}`);
     }
 };
+const addProduct = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const { productId, quantity } = req.body;
+        const orderDetails = await store.addProductToOrder(userId, productId, quantity);
+        res.json(orderDetails);
+    }
+    catch (err) {
+        console.error(err.message);
+        res.status(500).send(`${err.message}`);
+    }
+};
+const removeProduct = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const productId = req.body.productId;
+        const orderDetails = await store.removeProductFromOrder(userId, productId);
+        res.json(orderDetails);
+    }
+    catch (err) {
+        console.error(err.message);
+        res.status(500).send(`${err.message}`);
+    }
+};
 const userRouter = (app) => {
     app.get('/users', index);
     app.get('/users/:id', show);
     app.post('/users', create);
     app.get('/auth', authenticate);
+    app.post('/users/:id/add-product-to-order', addProduct);
+    app.delete('/users/:id/remove-product-from-order', removeProduct);
 };
 exports.userRouter = userRouter;
