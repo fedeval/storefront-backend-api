@@ -27,3 +27,5 @@ orderRouter(app);
 app.listen(PORT, function () {
   console.log(`starting app on port ${PORT}`);
 });
+
+export default app;
