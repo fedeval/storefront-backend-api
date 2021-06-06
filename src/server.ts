@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { productRouter } from './controllers/productsController';
+import { userRouter } from './controllers/usersController';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.get('/', function (req: Request, res: Response) {
 
 // Initialise all the routers
 productRouter(app);
+userRouter(app);
 
 app.listen(PORT, function () {
   console.log(`starting app on port ${PORT}`);
