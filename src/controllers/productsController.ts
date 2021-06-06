@@ -9,6 +9,7 @@ const index = async (req: Request, res: Response) => {
     res.json(products);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
@@ -19,6 +20,7 @@ const show = async (req: Request, res: Response) => {
     res.json(product);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
@@ -34,6 +36,7 @@ const create = async (req: Request, res: Response) => {
     res.json(product);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
@@ -44,6 +47,7 @@ const destroy = async (req: Request, res: Response) => {
     res.json(product);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 

@@ -10,6 +10,7 @@ const index = async (req, res) => {
     }
     catch (err) {
         console.error(err.message);
+        res.status(500).send(`${err.message}`);
     }
 };
 const show = async (req, res) => {
@@ -20,6 +21,7 @@ const show = async (req, res) => {
     }
     catch (err) {
         console.error(err.message);
+        res.status(500).send(`${err.message}`);
     }
 };
 const create = async (req, res) => {
@@ -35,6 +37,7 @@ const create = async (req, res) => {
     }
     catch (err) {
         console.error(err.message);
+        res.status(500).send(`${err.message}`);
     }
 };
 const destroy = async (req, res) => {
@@ -45,6 +48,7 @@ const destroy = async (req, res) => {
     }
     catch (err) {
         console.error(err.message);
+        res.status(500).send(`${err.message}`);
     }
 };
 const productRouter = (app) => {

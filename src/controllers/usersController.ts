@@ -9,6 +9,7 @@ const index = async (req: Request, res: Response) => {
     res.json(users);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
@@ -19,6 +20,7 @@ const show = async (req: Request, res: Response) => {
     res.json(user);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
@@ -34,6 +36,7 @@ const create = async (req: Request, res: Response) => {
     res.json(user);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
@@ -47,6 +50,7 @@ const authenticate = async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(`${err.message}`);
   }
 };
 
