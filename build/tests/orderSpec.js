@@ -61,7 +61,7 @@ describe('Order model method', () => {
         catch (err) {
             error = err.message;
         }
-        expect(error).toEqual('Cannot create order: there are no active orders for user 1');
+        expect(error).toEqual('Cannot update order: there are no active orders for user 1');
     });
     it('getActiveOrder should return an active order for the user, if it exists', async () => {
         await orderStore.create(1);

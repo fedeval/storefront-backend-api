@@ -67,7 +67,7 @@ describe('Order model method', () => {
       error = err.message;
     }
     expect(error).toEqual(
-      'Cannot create order: there are no active orders for user 1'
+      'Cannot update order: there are no active orders for user 1'
     );
   });
 

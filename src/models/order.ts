@@ -53,7 +53,7 @@ export class OrderStore {
         throw new Error(`there are no active orders for user ${userId}`);
       }
     } catch (err) {
-      throw new Error(`Cannot create order: ${err.message}`);
+      throw new Error(`Cannot update order: ${err.message}`);
     }
   }
 

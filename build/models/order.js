@@ -51,7 +51,7 @@ class OrderStore {
             }
         }
         catch (err) {
-            throw new Error(`Cannot create order: ${err.message}`);
+            throw new Error(`Cannot update order: ${err.message}`);
         }
     }
     async getActiveOrder(userId) {
@@ -67,7 +67,6 @@ class OrderStore {
             throw new Error(`Cannot retrieve active order: ${err}`);
         }
     }
-    // TODO: completed orders per user
     async getCompletedOrders(userId) {
         try {
             const connection = await database_1.default.connect();
