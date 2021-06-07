@@ -1,4 +1,4 @@
-import { UserStore } from '../../models/user';
+import { User, UserStore } from '../../models/user';
 import { ProductStore } from '../../models/product';
 import { OrderStore } from '../../models/order';
 import { userList, userListWithIdAndNoPwd } from '../helpers/userTestData';
@@ -58,7 +58,12 @@ describe('User model method', () => {
     const resultWithoutPwd = result.map((user) => {
       return _.pick(user, ['id', 'username', 'firstName', 'lastName']);
     });
+    const pwdChecks = result.every((user: User, i: number) => {
+      return bcrypt.compareSync(userList[i].password + PEPPER, user.password);
+    });
+    
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd);
+    expect(pwdChecks).toBe(true)
   });
 
   it('create should add a user', async () => {
@@ -74,6 +79,12 @@ describe('User model method', () => {
       'firstName',
       'lastName'
     ]);
+    const pwdCheck = bcrypt.compareSync(
+      'testpwd4' + PEPPER,
+      result.password
+    );
+    
+    expect(pwdCheck).toBe(true)
     expect(resultWithoutPwd).toEqual({
       id: 4,
       username: 'testuser4',
@@ -90,6 +101,12 @@ describe('User model method', () => {
       'firstName',
       'lastName'
     ]);
+    const pwdCheck = bcrypt.compareSync(
+      'testpwd4' + PEPPER,
+      result.password
+    );
+    
+    expect(pwdCheck).toBe(true)
     expect(resultWithoutPwd).toEqual({
       id: 4,
       username: 'testuser4',
@@ -100,6 +117,7 @@ describe('User model method', () => {
 
   it('authenticate should return null for the wrong user and password combination', async () => {
     const result = await store.authenticate('testuser1', 'testpwd2');
+    
     expect(result).toBe(null);
   });
 
@@ -111,6 +129,7 @@ describe('User model method', () => {
       'firstName',
       'lastName'
     ]);
+
     expect(resultWithoutPwd).toEqual(userListWithIdAndNoPwd[0]);
   });
 
@@ -146,6 +165,7 @@ describe('User method to modify orders', () => {
 
   it('addProductToOrder adds a product to an active order', async () => {
     const result = await store.addProductToOrder(1, 1, 10);
+    
     expect(result).toEqual({
       id: 1,
       productId: 1,
@@ -156,6 +176,7 @@ describe('User method to modify orders', () => {
 
   it('removeProductFromOrder returns the removed order details from an active order', async () => {
     const result = await store.removeProductFromOrder(1, 1);
+    
     expect(result).toEqual({
       id: 1,
       productId: 1,

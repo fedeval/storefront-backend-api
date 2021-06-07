@@ -49,7 +49,11 @@ describe('User model method', () => {
         const resultWithoutPwd = result.map((user) => {
             return lodash_1.default.pick(user, ['id', 'username', 'firstName', 'lastName']);
         });
+        const pwdChecks = result.every((user, i) => {
+            return bcrypt_1.default.compareSync(userTestData_1.userList[i].password + PEPPER, user.password);
+        });
         expect(resultWithoutPwd).toEqual(userTestData_1.userListWithIdAndNoPwd);
+        expect(pwdChecks).toBe(true);
     });
     it('create should add a user', async () => {
         const result = await store.create({
@@ -64,6 +68,8 @@ describe('User model method', () => {
             'firstName',
             'lastName'
         ]);
+        const pwdCheck = bcrypt_1.default.compareSync('testpwd4' + PEPPER, result.password);
+        expect(pwdCheck).toBe(true);
         expect(resultWithoutPwd).toEqual({
             id: 4,
             username: 'testuser4',
@@ -79,6 +85,8 @@ describe('User model method', () => {
             'firstName',
             'lastName'
         ]);
+        const pwdCheck = bcrypt_1.default.compareSync('testpwd4' + PEPPER, result.password);
+        expect(pwdCheck).toBe(true);
         expect(resultWithoutPwd).toEqual({
             id: 4,
             username: 'testuser4',
