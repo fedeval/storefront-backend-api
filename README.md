@@ -1,54 +1,140 @@
-# Storefront Backend Project
+# Storefront Backend API - Udacity Fullstack JS Nanodegree #
 
-## Getting Started
+## Introduction ##
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+This is a REST API simulating an e-commerce backend based on three models: Products, Orders and Users. A detailed list of the endpoints and actions available can be found in the [REQUIREMENTS.md](https://github.com/fedeval/storefront-backend-api/blob/main/REQUIREMENTS.md) file.
 
-## Required Technologies
-Your application must make use of the following libraries:
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+---
+## Setup ##
 
-## Steps to Completion
+### Database config ###
 
-### 1. Plan to Meet Requirements
+The API connects to a postgres database. As a first step, it is necessary to create two databases (development and test) on your local machine. Run the command `psql postgres` in terminal to open the postgres CLI. Then run the following:
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+```SQL
+CREATE USER storefront_user WITH PASSWORD 'YOUR_PASSWORD_HERE';
+CREATE DATABASE storefront;
+\c storefront;
+GRANT ALL PRIVILEGES ON DATABASE storefront TO storefront_user;
+CREATE DATABASE storefront_test;
+\c storefront_test;
+GRANT ALL PRIVILEGES ON DATABASE storefront_test TO storefront_user;
+````
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+To make sure the API can connect to the db it is necessary to create a `database.json` file with the following format
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+```json
+{
+  "dev": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "storefront",
+    "user": "storefront_user",
+    "password": 'YOUR_PASSWORD_HERE'
+  },
+  "test": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "storefront_test",
+    "user": "storefront_user",
+    "password": 'YOUR_PASSWORD_HERE'
+  }
+}
+```
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+Note: it is best to add this file to a `.gitignore` file in order to keep the password hidden.
 
-### 2.  DB Creation and Migrations
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
+### Environment variables ###
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+The API relies on several environment variables to function. `dotenv` is already included in the `package.json`file, so it is only necessary to create a `.env` file with the following variables:
 
-### 3. Models
+| Name              | Value            | Notes         |
+| ------------------|:----------------:|:-------------:|
+| POSTGRES_HOST     | 127.0.0.1        | Same value as in the database.json file |
+| POSTGRES_DB       | storefront       | Same value as in the database.json file |   
+| POSTGRES_TEST_DB  | storefront_test  | Same value as in the database.json file |
+| POSTGRES_USER     | storefront_user  | Same value as in the database.json file |
+| POSTGRES_PASSWORD | YOUR_PASSWORD    | Same value as in the database.json file |
+| ENV               | dev              | Used to set the DB environment. The test script automatically sets it to 'test' when runnning.|
+| PORT              | YOUR_PORT        | The API will run on http://localhost.3000 by default, but there is the option to select a custom port as an envrionment variable |
+| SALT_ROUNDS       | 10               | Number of salt rounds the password hashing function of the bcrypt package will be using|
+| PEPPER            | YOUR_STRING_HERE | A string of your choice that bcrypt will be adding prior to hashing passwords for an extra layer of security |
+| TOKEN_SECRET      | YOUR_STRING_HERE | A string that will be used by jwt to generate authentication tokens. The more complex the better, it should be made of random characters ideally. |
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+**IMPORTANT: .env should be added to .gitignore and never committed to a public repo.**
 
-### 4. Express Handlers
+---
+## Getting Started ##
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+### Installing dependencies ###
 
-### 5. JWTs
+After cloning the repo, all the project dependencies can be installed using npm:
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+```
+npm install
+```
 
-### 6. QA and `README.md`
+### Running the server ###
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
+To execute the API code use the following command in terminal:
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+```
+npm run start
+```
+
+the API will then be available on port 3000 by default or at the PORT set in the .env file.
+
+### Scripts ###
+
+The following actions can be executed through npm scripts:
+
+#### Transpiling typescript to javascript ####
+
+```
+npm run build
+```
+
+The transpiled code will be available in the `\build` folder. The transpiling option and configuration can be changed by editing the `tsconfig.json` file.
+
+#### Testing ####
+
+A set of jasmine testing suites and specs can be used to test both the endpoints as well as the models. 
+
+```
+npm run test
+```
+
+This script runs migrations and tests on the test database by setting the ENV variable to `test` using the `cross-env` package. The script relies on two "child scripts" `npm run jasmine`and `npm run migrate-and-jasmine`. Those script have been broken up for readability but they should never be run. 
+
+NOTE: if the test script is interrupted by an NPM Error, it will not run to the end, thus potentially leaving data in the test database. To fix that it is recommended to reset the test database by running `db-migrate reset -e test` in the terminal before running again any tests. For this command to work db-migrate should be globally installed on your machine as such: `npm i -g db-migrate`
+
+
+#### Formatting ####
+
+The code can be automatically formatted using prettier. The formatting options can be customised by editing the `.prettierrc`file.
+
+```
+npm run prettier
+```
+
+#### Linting ####
+
+The code can ba automatically linted using ESlint. Note that ESlint will also use prettier to test for incorrect formatting. Rules, plugins and extensions for ESlint can be modified through the `.eslintrc` file.
+
+```
+npm run lint
+```
+
+#### Watcher ####
+
+This will kick off the watcher library and start running the application on the port specified in `server.ts` or the `.env`file.
+
+```
+npm run watch
+```
+
+---
+## How to use ##
+
+The API offers several endpoints to access and manipulate data in the database through both CRUD and custom actions. The details of what is required to successfully send requests to each endpoint, data shapes and db schema can be found in the [REQUIREMENTS.md](https://github.com/fedeval/storefront-backend-api/blob/main/REQUIREMENTS.md) file.
