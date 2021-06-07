@@ -8,15 +8,15 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { TOKEN_SECRET } = process.env;
-const createAuthToken = (user) => {
-    return jsonwebtoken_1.default.sign({ username: user.username }, TOKEN_SECRET);
+const createAuthToken = (username) => {
+    return jsonwebtoken_1.default.sign({ username: username }, TOKEN_SECRET);
 };
 exports.createAuthToken = createAuthToken;
 const verifyAuthToken = (req, res, next) => {
     try {
         const authorizationHeader = req.headers.authorization;
         const token = authorizationHeader ? authorizationHeader.split(' ')[1] : '';
-        const decoded = jsonwebtoken_1.default.verify(token, TOKEN_SECRET);
+        jsonwebtoken_1.default.verify(token, TOKEN_SECRET);
         next();
     }
     catch (error) {

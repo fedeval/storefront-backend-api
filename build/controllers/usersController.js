@@ -40,7 +40,7 @@ const create = async (req, res) => {
     };
     try {
         const user = await store.create(userInfo);
-        const token = jwtAuthentication_1.createAuthToken(user);
+        const token = jwtAuthentication_1.createAuthToken(user.username);
         res.json(token);
     }
     catch (err) {
@@ -52,7 +52,8 @@ const authenticate = async (req, res) => {
     try {
         const user = await store.authenticate(req.body.username, req.body.password);
         if (user) {
-            res.json(user);
+            const token = jwtAuthentication_1.createAuthToken(user.username);
+            res.json(token);
         }
         else {
             res.send('Invalid username and/or password');
@@ -88,11 +89,11 @@ const removeProduct = async (req, res) => {
     }
 };
 const userRouter = (app) => {
-    app.get('/users', jwtAuthentication_1.verifyAuthToken, index);
-    app.get('/users/:id', jwtAuthentication_1.verifyAuthToken, show);
+    app.get('/users', index);
+    app.get('/users/:id', show);
     app.post('/users', create);
-    app.get('/auth', jwtAuthentication_1.verifyAuthToken, authenticate);
-    app.post('/users/:id/add-product-to-order', jwtAuthentication_1.verifyAuthToken, addProduct);
-    app.delete('/users/:id/remove-product-from-order', jwtAuthentication_1.verifyAuthToken, removeProduct);
+    app.get('/auth', authenticate);
+    app.post('/users/:id/add-product-to-order', addProduct);
+    app.delete('/users/:id/remove-product-from-order', removeProduct);
 };
 exports.userRouter = userRouter;

@@ -19,16 +19,7 @@ const { PEPPER } = process.env;
 describe('Users controller', () => {
     it('posts /users: returns a token', async () => {
         const response = await request.post('/users').send(userTestData_1.userList[0]);
-        // const pwdCheck = bcrypt.compareSync(
-        //   userList[0].password + PEPPER,
-        //   response.body.password
-        // );
-        console.log(response);
         expect(response.status).toBe(200);
-        // expect(pwdCheck).toBe(true);
-        // expect(
-        //   _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
-        // ).toEqual(userListWithIdAndNoPwd[0]);
         expect(response.body).toBeInstanceOf(String);
         expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/);
     });
@@ -51,14 +42,13 @@ describe('Users controller', () => {
         expect(pwdCheck).toBe(true);
         expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
     });
-    it('gets /auth: returns a user in JSON if the username/password combination is valid', async () => {
+    it('gets /auth: returns a token if the username/password combination is valid', async () => {
         const response = await request
             .get('/auth')
             .send({ username: userTestData_1.userList[0].username, password: userTestData_1.userList[0].password });
-        const pwdCheck = bcrypt_1.default.compareSync(userTestData_1.userList[0].password + PEPPER, response.body.password);
         expect(response.status).toBe(200);
-        expect(pwdCheck).toBe(true);
-        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
+        expect(response.body).toBeInstanceOf(String);
+        expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/);
     });
     it('gets /auth: returns an error message if the username/password combination is not valid', async () => {
         const response = await request

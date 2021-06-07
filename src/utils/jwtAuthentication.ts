@@ -14,7 +14,7 @@ export const verifyAuthToken = (req: Request, res: Response, next: Function) => 
   try {
     const authorizationHeader = req.headers.authorization 
     const token = authorizationHeader ? authorizationHeader.split(' ')[1] : ''
-    const decoded = jwt.verify(token, TOKEN_SECRET as unknown as jwt.Secret)
+    jwt.verify(token, TOKEN_SECRET as unknown as jwt.Secret)
     
     next()
   } catch (error) {

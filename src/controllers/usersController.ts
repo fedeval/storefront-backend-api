@@ -90,10 +90,10 @@ const removeProduct = async (req: Request, res: Response) => {
 };
 
 export const userRouter = (app: Application): void => {
-  app.get('/users', verifyAuthToken, index);
-  app.get('/users/:id', verifyAuthToken, show);
+  app.get('/users', index);
+  app.get('/users/:id', show);
   app.post('/users', create);
-  app.get('/auth', verifyAuthToken, authenticate);
-  app.post('/users/:id/add-product-to-order', verifyAuthToken, addProduct);
-  app.delete('/users/:id/remove-product-from-order', verifyAuthToken, removeProduct);
+  app.get('/auth', authenticate);
+  app.post('/users/:id/add-product-to-order', addProduct);
+  app.delete('/users/:id/remove-product-from-order', removeProduct);
 };

@@ -1,5 +1,6 @@
 import { Application, Request, Response } from 'express';
 import { Product, ProductStore } from '../models/product';
+import { verifyAuthToken } from '../utils/jwtAuthentication'
 
 const store = new ProductStore();
 
@@ -54,6 +55,6 @@ const destroy = async (req: Request, res: Response) => {
 export const productRouter = (app: Application): void => {
   app.get('/products', index);
   app.get('/products/:id', show);
-  app.post('/products', create);
-  app.delete('/products/:id', destroy);
+  app.post('/products', verifyAuthToken, create);
+  app.delete('/products/:id', verifyAuthToken, destroy);
 };

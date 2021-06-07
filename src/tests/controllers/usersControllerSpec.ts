@@ -19,7 +19,6 @@ describe('Users controller', () => {
   it('posts /users: returns a token', async () => {
     const response = await request.post('/users').send(userList[0]);
 
-    console.log(response)
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(String)
     expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
