@@ -1,6 +1,7 @@
 import app from '../../server';
 import supertest from 'supertest';
 import { User, UserStore } from '../../models/user';
+import { userList } from '../helpers/userTestData'
 import Client from '../../database';
 
 const request = supertest(app);
@@ -8,13 +9,7 @@ const request = supertest(app);
 describe('Orders controller', () => {
   beforeAll(async () => {
     const userStore = new UserStore();
-    const testUser: User = {
-      username: 'testuser',
-      firstName: 'Freddie',
-      lastName: 'Mercury',
-      password: 'queen123'
-    };
-    await userStore.create(testUser);
+    await userStore.create(userList[0]);
   });
 
   it('posts on /orders endpoint and returns an active order in JSON format', async () => {
