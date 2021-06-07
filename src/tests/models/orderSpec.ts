@@ -31,6 +31,7 @@ describe('Order model method', () => {
 
   it('create should add an order', async () => {
     const result = await orderStore.create(1);
+
     expect(result).toEqual({
       id: 1,
       userId: 1,
@@ -45,6 +46,7 @@ describe('Order model method', () => {
     } catch (err) {
       error = err.message;
     }
+
     expect(error).toEqual(
       'Cannot create order: an active order for this user already exists'
     );
@@ -52,6 +54,7 @@ describe('Order model method', () => {
 
   it('updateStatus should update an order to complete if an active order is present for given user id', async () => {
     const result = await orderStore.updateStatus(1);
+
     expect(result).toEqual({
       id: 1,
       userId: 1,
@@ -66,6 +69,7 @@ describe('Order model method', () => {
     } catch (err) {
       error = err.message;
     }
+
     expect(error).toEqual(
       'Cannot update order: there are no active orders for user 1'
     );
@@ -74,6 +78,7 @@ describe('Order model method', () => {
   it('getActiveOrder should return an active order for the user, if it exists', async () => {
     await orderStore.create(1);
     const result = await orderStore.getActiveOrder(1);
+
     expect(result).toEqual({
       id: 2,
       userId: 1,
@@ -83,6 +88,7 @@ describe('Order model method', () => {
 
   it('getCompletedOrders should return a all completed orders for user', async () => {
     let result = await orderStore.getCompletedOrders(1);
+
     expect(result).toEqual([
       {
         id: 1,
@@ -93,6 +99,7 @@ describe('Order model method', () => {
 
     await orderStore.updateStatus(1);
     result = await orderStore.getCompletedOrders(1);
+
     expect(result).toEqual([
       {
         id: 1,

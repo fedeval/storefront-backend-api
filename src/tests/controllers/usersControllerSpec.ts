@@ -22,11 +22,12 @@ describe('Users controller', () => {
       userList[0].password + PEPPER,
       response.body.password
     );
+
     expect(response.status).toBe(200);
+    expect(pwdCheck).toBe(true);
     expect(
       _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
     ).toEqual(userListWithIdAndNoPwd[0]);
-    expect(pwdCheck).toBe(true);
   });
 
   it('gets /users: returns a list of users in JSON format with hashed passwords', async () => {
@@ -37,6 +38,7 @@ describe('Users controller', () => {
     const pwdChecks = response.body.every((user: User, i: number) => {
       return bcrypt.compareSync(userList[i].password + PEPPER, user.password);
     });
+
     expect(response.status).toBe(200);
     expect(returnedUsers).toEqual([userListWithIdAndNoPwd[0]]);
     expect(pwdChecks).toBe(true);
@@ -48,11 +50,12 @@ describe('Users controller', () => {
       userList[0].password + PEPPER,
       response.body.password
     );
+
     expect(response.status).toBe(200);
+    expect(pwdCheck).toBe(true);
     expect(
       _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
     ).toEqual(userListWithIdAndNoPwd[0]);
-    expect(pwdCheck).toBe(true);
   });
 
   it('gets /auth: returns a user in JSON if the username/password combination is valid', async () => {
@@ -63,17 +66,19 @@ describe('Users controller', () => {
       userList[0].password + PEPPER,
       response.body.password
     );
+
     expect(response.status).toBe(200);
+    expect(pwdCheck).toBe(true);
     expect(
       _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
     ).toEqual(userListWithIdAndNoPwd[0]);
-    expect(pwdCheck).toBe(true);
   });
 
   it('gets /auth: returns an error message if the username/password combination is not valid', async () => {
     const response = await request
       .get('/auth')
       .send({ username: userList[0].username, password: 'test' });
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({});
     expect(response.text).toEqual('Invalid username and/or password');
@@ -88,6 +93,7 @@ describe('Users controller', () => {
     const response = await request
       .post('/users/1/add-product-to-order')
       .send({ productId: 1, quantity: 10 });
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,
@@ -101,6 +107,7 @@ describe('Users controller', () => {
     const response = await request
       .delete('/users/1/remove-product-from-order')
       .send({ productId: 1 });
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,

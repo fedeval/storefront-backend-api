@@ -9,6 +9,7 @@ describe('Products controller', () => {
     const response = await request
       .post('/products')
       .send({ name: 'bike', price: 200, category: 'sports', rating: 4.32 });
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,
@@ -21,6 +22,7 @@ describe('Products controller', () => {
 
   it('gets /products: returns a list of products in JSON format', async () => {
     const response = await request.get('/products');
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
       {
@@ -35,6 +37,7 @@ describe('Products controller', () => {
 
   it('gets /products/:id: returns a product in JSON format', async () => {
     const response = await request.get('/products/1');
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,
@@ -47,6 +50,7 @@ describe('Products controller', () => {
 
   it('deletes /products/:id: returns the deleted product in JSON format', async () => {
     const response = await request.get('/products/1');
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,

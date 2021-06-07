@@ -40,6 +40,7 @@ describe('Product model method', () => {
 
   it('index should return a list of all products', async () => {
     const result = await store.index();
+
     expect(result).toEqual(prodListWithId);
   });
 
@@ -50,6 +51,7 @@ describe('Product model method', () => {
       category: 'office',
       rating: 4.2
     });
+
     expect(result).toEqual({
       id: 8,
       name: 'notepad',
@@ -61,6 +63,7 @@ describe('Product model method', () => {
 
   it('show should return the product with the given id', async () => {
     const result = await store.show(8);
+
     expect(result).toEqual({
       id: 8,
       name: 'notepad',
@@ -73,6 +76,8 @@ describe('Product model method', () => {
   it('delete should remove the product with the given id', async () => {
     const deletedProduct = await store.delete(8);
     const products = await store.index();
+
+    expect(products).not.toContain(deletedProduct);
     expect(deletedProduct).toEqual({
       id: 8,
       name: 'notepad',
@@ -80,7 +85,6 @@ describe('Product model method', () => {
       category: 'office',
       rating: 4.2
     });
-    expect(products).not.toContain(deletedProduct);
   });
 
   afterAll(async () => {

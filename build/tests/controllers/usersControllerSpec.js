@@ -21,8 +21,8 @@ describe('Users controller', () => {
         const response = await request.post('/users').send(userTestData_1.userList[0]);
         const pwdCheck = bcrypt_1.default.compareSync(userTestData_1.userList[0].password + PEPPER, response.body.password);
         expect(response.status).toBe(200);
-        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
         expect(pwdCheck).toBe(true);
+        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
     });
     it('gets /users: returns a list of users in JSON format with hashed passwords', async () => {
         const response = await request.get('/users');
@@ -40,8 +40,8 @@ describe('Users controller', () => {
         const response = await request.get('/users/1');
         const pwdCheck = bcrypt_1.default.compareSync(userTestData_1.userList[0].password + PEPPER, response.body.password);
         expect(response.status).toBe(200);
-        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
         expect(pwdCheck).toBe(true);
+        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
     });
     it('gets /auth: returns a user in JSON if the username/password combination is valid', async () => {
         const response = await request
@@ -49,8 +49,8 @@ describe('Users controller', () => {
             .send({ username: userTestData_1.userList[0].username, password: userTestData_1.userList[0].password });
         const pwdCheck = bcrypt_1.default.compareSync(userTestData_1.userList[0].password + PEPPER, response.body.password);
         expect(response.status).toBe(200);
-        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
         expect(pwdCheck).toBe(true);
+        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
     });
     it('gets /auth: returns an error message if the username/password combination is not valid', async () => {
         const response = await request

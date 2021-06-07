@@ -14,6 +14,7 @@ describe('Orders controller', () => {
 
   it('posts on /orders: returns an active order in JSON format', async () => {
     const response = await request.post('/orders').send({ userId: 1 });
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,
@@ -24,6 +25,7 @@ describe('Orders controller', () => {
 
   it('gets /orders/users/:userId/active: returns an active order in JSON format', async () => {
     const response = await request.get('/orders/users/1/active');
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,
@@ -34,6 +36,7 @@ describe('Orders controller', () => {
 
   it('puts /orders: returns a completed order in JSON format', async () => {
     const response = await request.put('/orders').send({ userId: 1 });
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       id: 1,
@@ -44,6 +47,7 @@ describe('Orders controller', () => {
 
   it('gets /orders/users/:userId/completed: returns a list of completed orders in JSON format', async () => {
     const response = await request.get('/orders/users/1/completed');
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
       {
