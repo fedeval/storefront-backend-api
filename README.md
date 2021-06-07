@@ -57,7 +57,7 @@ The API relies on several environment variables to function. `dotenv` is already
 | POSTGRES_USER     | storefront_user  | Same value as in the database.json file |
 | POSTGRES_PASSWORD | YOUR_PASSWORD    | Same value as in the database.json file |
 | ENV               | dev              | Used to set the DB environment. The test scripts automatically changes it to test when runnning, using the crosss-env package.|
-| PORT              | 3000             | The API will run on http://localhost.${PORT} |
+| PORT              | YOUR_PORT        | The API will run on http://localhost.3000 but you have to option to select your own port as an envrionment variable |
 | SALT_ROUNDS       | 10               | Number of salt rounds the password hashing function of the bcrypt package will be using|
 | PEPPER            | YOUR_STRING_HERE | A string of your choise that bcrypt will be adding when prior to hashing passwords for an extra layer of security |
 | TOKEN_SECRET      | YOUR_STRING_HERE | A string that will be used by jwt to generate authentication tokens. The more complex the better, it should be random carachters ideally. |
@@ -83,7 +83,7 @@ To execute the application use the following command in terminal:
 npm run start
 ```
 
-the app will then be available on port 3000 by default, but that can be changed by editing the PORT environment variable (more details on environment variables in the next section.
+the API will then be available on port 3000 by default or at the PORT set in the .env file.
 
 ### Scripts ###
 
@@ -104,12 +104,14 @@ A set of jasmine testing suites can be used to test both the endpoints as well a
 ```
 npm run test
 ```
-NOTE: this script runs migrations on a test database.
+This script runs migrations and test on the test database by setting the ENV variable to `test` using the `cross-env` package. The script relies on two "child scripts" `npm run jasmine`and `npm run migrate-and-jasmine`. Those script have been broken up for readability but they should never be run. 
+
+NOTE: if the test script is interrupted by an NPM Error, it will not run to the end, thus potentially leaving data in the test database. To fix that it is possible to reset the test database by running `db-migrate reset -e test`in the terminal. For this command to work db-migrate should be globally installed on you machine as such: `npm i -g db-migrate`
 
 
 #### Formatting ####
 
-The code can be automatically formatted using prettier. The formatting options can be customised by editin the `.prettierrc`file.
+The code can be automatically formatted using prettier. The formatting options can be customised by editing the `.prettierrc`file.
 
 ```
 npm run prettier
@@ -122,23 +124,14 @@ The code can ba automatically linted using ESlint. Note that ESlint will also us
 ```
 npm run lint
 ```
+
+#### Watcher ####
+This will kick off the watcher library and start running the application on the port specified in `server.ts` or the `.env`file.
+```
+npm run watch
+```
+
 ---
 ## How to use ##
 
-The API offers one endpoint to access and resize images available in the `public/images/full` folder.
-
-The endpoint is `api/images` and requires three query params:
-
-| Query Param   | Value         |
-| ------------- |:-------------:|
-| filename      | the filename (without extension) of one of the images available in the folder |
-| height        | it should be a positive integer      |
-| width         | it should be a positive integer      |
-
-Note that full instructions including a preview of all the available images and their filenames can be accessed using the main API endpoint. Assuming the app is running on port 3000 that would be:
-
-[http://localhost:3000/api](http://localhost:3000/api)
-
-An example of a correct endpoint call would be: 
-
-[http://localhost:3000/api/images?filename=palmtunnel&height=250&width=220](http://localhost:3000/api/images?filename=palmtunnel&height=250&width=220)
+The API offers several endpoints to access and manipulate data in the database through both CRUD and custom actions. The details of what is required to successfully send requests to each point can be found in the [REQUIREMENTS.md](https://github.com/fedeval/storefront-backend-api/blob/main/REQUIREMENTS.md) file.
