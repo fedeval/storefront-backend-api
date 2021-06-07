@@ -5,7 +5,7 @@ import Client from '../../database';
 const request = supertest(app);
 
 describe('Products controller', () => {
-  it('posts on /products/:id endpoint and returns a product in JSON format', async () => {
+  it('posts on /products endpoint and returns a product in JSON format', async () => {
     const response = await request
       .post('/products')
       .send({ name: 'bike', price: 200, category: 'sports', rating: 4.32 });

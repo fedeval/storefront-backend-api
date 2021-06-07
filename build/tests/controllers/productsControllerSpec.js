@@ -8,8 +8,10 @@ const supertest_1 = __importDefault(require("supertest"));
 const database_1 = __importDefault(require("../../database"));
 const request = supertest_1.default(server_1.default);
 describe('Products controller', () => {
-    it('posts on /products/:id endpoint and returns a product in JSON format', async () => {
-        const response = await request.post('/products').send({ name: 'bike', price: 200, category: 'sports', rating: 4.32 });
+    it('posts on /products endpoint and returns a product in JSON format', async () => {
+        const response = await request
+            .post('/products')
+            .send({ name: 'bike', price: 200, category: 'sports', rating: 4.32 });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,
@@ -22,13 +24,15 @@ describe('Products controller', () => {
     it('gets /products endpoint and returns a list of products in JSON format', async () => {
         const response = await request.get('/products');
         expect(response.status).toBe(200);
-        expect(response.body).toEqual([{
+        expect(response.body).toEqual([
+            {
                 id: 1,
                 name: 'bike',
                 price: 200,
                 category: 'sports',
                 rating: 4.32
-            }]);
+            }
+        ]);
     });
     it('gets /products/:id endpoint and returns a product in JSON format', async () => {
         const response = await request.get('/products/1');
