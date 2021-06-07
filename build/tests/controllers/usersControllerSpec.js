@@ -44,14 +44,18 @@ describe('Users controller', () => {
         expect(pwdCheck).toBe(true);
     });
     it('gets /auth: returns a user in JSON if the username/password combination is valid', async () => {
-        const response = await request.get('/auth').send({ username: userTestData_1.userList[0].username, password: userTestData_1.userList[0].password });
+        const response = await request
+            .get('/auth')
+            .send({ username: userTestData_1.userList[0].username, password: userTestData_1.userList[0].password });
         const pwdCheck = bcrypt_1.default.compareSync(userTestData_1.userList[0].password + PEPPER, response.body.password);
         expect(response.status).toBe(200);
         expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
         expect(pwdCheck).toBe(true);
     });
     it('gets /auth: returns an error message if the username/password combination is not valid', async () => {
-        const response = await request.get('/auth').send({ username: userTestData_1.userList[0].username, password: 'test' });
+        const response = await request
+            .get('/auth')
+            .send({ username: userTestData_1.userList[0].username, password: 'test' });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({});
         expect(response.text).toEqual('Invalid username and/or password');
@@ -61,7 +65,9 @@ describe('Users controller', () => {
         const orderStore = new order_1.OrderStore();
         await productStore.create(productTestData_1.productList[0]);
         await orderStore.create(1);
-        const response = await request.post('/users/1/add-product-to-order').send({ productId: 1, quantity: 10 });
+        const response = await request
+            .post('/users/1/add-product-to-order')
+            .send({ productId: 1, quantity: 10 });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,
@@ -71,7 +77,9 @@ describe('Users controller', () => {
         });
     });
     it('deletes /users/:id/remove-product-from-order: returns the order details', async () => {
-        const response = await request.delete('/users/1/remove-product-from-order').send({ productId: 1 });
+        const response = await request
+            .delete('/users/1/remove-product-from-order')
+            .send({ productId: 1 });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,
