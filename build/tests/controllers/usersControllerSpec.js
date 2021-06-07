@@ -17,12 +17,20 @@ const request = supertest_1.default(server_1.default);
 dotenv_1.default.config();
 const { PEPPER } = process.env;
 describe('Users controller', () => {
-    it('posts /users: returns a user in JSON format with a hashed password', async () => {
+    it('posts /users: returns a token', async () => {
         const response = await request.post('/users').send(userTestData_1.userList[0]);
-        const pwdCheck = bcrypt_1.default.compareSync(userTestData_1.userList[0].password + PEPPER, response.body.password);
+        // const pwdCheck = bcrypt.compareSync(
+        //   userList[0].password + PEPPER,
+        //   response.body.password
+        // );
+        console.log(response);
         expect(response.status).toBe(200);
-        expect(pwdCheck).toBe(true);
-        expect(lodash_1.default.pick(response.body, ['id', 'username', 'firstName', 'lastName'])).toEqual(userTestData_1.userListWithIdAndNoPwd[0]);
+        // expect(pwdCheck).toBe(true);
+        // expect(
+        //   _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
+        // ).toEqual(userListWithIdAndNoPwd[0]);
+        expect(response.body).toBeInstanceOf(String);
+        expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/);
     });
     it('gets /users: returns a list of users in JSON format with hashed passwords', async () => {
         const response = await request.get('/users');

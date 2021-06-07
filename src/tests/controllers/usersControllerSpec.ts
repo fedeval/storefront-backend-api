@@ -16,18 +16,13 @@ dotenv.config();
 const { PEPPER } = process.env;
 
 describe('Users controller', () => {
-  it('posts /users: returns a user in JSON format with a hashed password', async () => {
+  it('posts /users: returns a token', async () => {
     const response = await request.post('/users').send(userList[0]);
-    const pwdCheck = bcrypt.compareSync(
-      userList[0].password + PEPPER,
-      response.body.password
-    );
 
+    console.log(response)
     expect(response.status).toBe(200);
-    expect(pwdCheck).toBe(true);
-    expect(
-      _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
-    ).toEqual(userListWithIdAndNoPwd[0]);
+    expect(response.body).toBeInstanceOf(String)
+    expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
   });
 
   it('gets /users: returns a list of users in JSON format with hashed passwords', async () => {
@@ -58,20 +53,14 @@ describe('Users controller', () => {
     ).toEqual(userListWithIdAndNoPwd[0]);
   });
 
-  it('gets /auth: returns a user in JSON if the username/password combination is valid', async () => {
+  it('gets /auth: returns a token if the username/password combination is valid', async () => {
     const response = await request
       .get('/auth')
       .send({ username: userList[0].username, password: userList[0].password });
-    const pwdCheck = bcrypt.compareSync(
-      userList[0].password + PEPPER,
-      response.body.password
-    );
 
     expect(response.status).toBe(200);
-    expect(pwdCheck).toBe(true);
-    expect(
-      _.pick(response.body, ['id', 'username', 'firstName', 'lastName'])
-    ).toEqual(userListWithIdAndNoPwd[0]);
+    expect(response.body).toBeInstanceOf(String)
+    expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
   });
 
   it('gets /auth: returns an error message if the username/password combination is not valid', async () => {

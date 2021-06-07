@@ -1,9 +1,23 @@
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
+import { Request, Response } from 'express'
+import { User } from '../models/user'
+import dotenv from 'dotenv'
 
-const createAuthToken = () => {
+dotenv.config()
+const { TOKEN_SECRET } = process.env
 
+export const createAuthToken = (username: string) => {
+  return jwt.sign({username: username}, TOKEN_SECRET as unknown as string)
 }
 
-const verifyAuthToken = () => {
-  
+export const verifyAuthToken = (req: Request, res: Response, next: Function) => {
+  try {
+    const authorizationHeader = req.headers.authorization 
+    const token = authorizationHeader ? authorizationHeader.split(' ')[1] : ''
+    const decoded = jwt.verify(token, TOKEN_SECRET as unknown as jwt.Secret)
+    
+    next()
+  } catch (error) {
+    res.status(401)
+  }
 }
