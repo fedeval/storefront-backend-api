@@ -63,8 +63,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Orders
 - id
-- id of each product in the order
-- quantity of each product in the order
 - user_id
 - status of order (active or complete)
 
@@ -76,6 +74,12 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 Since an order has many products and a product can be in many orders, we need a join
 table to represent this N:N relationship.
+
+##### Order_details
+- id
+- id of product
+- quantity of product
+- id of order to which the product has been added
 
 | Column        | Type                       |
 | ------------- |:--------------------------:|
