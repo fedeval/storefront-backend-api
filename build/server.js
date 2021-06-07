@@ -8,10 +8,14 @@ const productsController_1 = require("./controllers/productsController");
 const usersController_1 = require("./controllers/usersController");
 const ordersController_1 = require("./controllers/ordersController");
 const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = express_1.default();
 const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
+app.use(cors_1.default({
+    origin: `http://localhost:${PORT}`
+}));
 app.get('/', function (req, res) {
     res.send('Hello World!');
 });
@@ -22,3 +26,4 @@ ordersController_1.orderRouter(app);
 app.listen(PORT, function () {
     console.log(`starting app on port ${PORT}`);
 });
+exports.default = app;

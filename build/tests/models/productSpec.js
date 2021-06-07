@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const product_1 = require("../models/product");
-const productTestData_1 = require("./helpers/productTestData");
-const database_1 = __importDefault(require("../database"));
+const product_1 = require("../../models/product");
+const productTestData_1 = require("../helpers/productTestData");
+const database_1 = __importDefault(require("../../database"));
 const store = new product_1.ProductStore();
 describe('Product model', () => {
     it('has an index method', () => {
@@ -67,6 +67,7 @@ describe('Product model method', () => {
     it('delete should remove the product with the given id', async () => {
         const deletedProduct = await store.delete(8);
         const products = await store.index();
+        expect(products).not.toContain(deletedProduct);
         expect(deletedProduct).toEqual({
             id: 8,
             name: 'notepad',
@@ -74,7 +75,6 @@ describe('Product model method', () => {
             category: 'office',
             rating: 4.2
         });
-        expect(products).not.toContain(deletedProduct);
     });
     afterAll(async () => {
         const connection = await database_1.default.connect();

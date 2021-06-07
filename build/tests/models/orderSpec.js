@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const order_1 = require("../models/order");
-const user_1 = require("../models/user");
-const userTestData_1 = require("./helpers/userTestData");
-const database_1 = __importDefault(require("../database"));
+const order_1 = require("../../models/order");
+const user_1 = require("../../models/user");
+const userTestData_1 = require("../helpers/userTestData");
+const database_1 = __importDefault(require("../../database"));
 const orderStore = new order_1.OrderStore();
 const userStore = new user_1.UserStore();
 describe('Order model', () => {
