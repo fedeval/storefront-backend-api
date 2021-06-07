@@ -6,12 +6,12 @@
   "scripts": {
     "build": "npx tsc",
     "start": "nodemon src/server.ts",
-    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
-    "jasmine": "jasmine; exit 0",
     "test": "cross-env ENV=test npm run migrate-and-jasmine",
-    "migrate-and-jasmine": "db-migrate up -e test && npm run build && npm run jasmine && db-migrate reset -e test",
+    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
     "lint": "eslint . --ext .ts",
-    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "jasmine": "jasmine; exit 0",
+    "migrate-and-jasmine": "db-migrate up -e test && npm run build && npm run jasmine && db-migrate reset -e test"
   },
   "author": "Udacity",
   "license": "ISC",
