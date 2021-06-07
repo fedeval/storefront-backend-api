@@ -1,5 +1,6 @@
 import { Application, Request, Response } from 'express';
 import { OrderStore } from '../models/order';
+import { verifyAuthToken } from '../utils/jwtAuthentication';
 
 const store = new OrderStore();
 
@@ -48,8 +49,8 @@ const completed = async (req: Request, res: Response) => {
 };
 
 export const orderRouter = (app: Application): void => {
-  app.post('/orders', create);
-  app.put('/orders', update);
-  app.get('/orders/users/:userId/active', active);
-  app.get('/orders/users/:userId/completed', completed);
+  app.post('/orders', verifyAuthToken, create);
+  app.put('/orders', verifyAuthToken, update);
+  app.get('/orders/users/:userId/active', verifyAuthToken, active);
+  app.get('/orders/users/:userId/completed', verifyAuthToken, completed);
 };

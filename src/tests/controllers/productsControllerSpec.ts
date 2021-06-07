@@ -1,12 +1,7 @@
 import app from '../../server';
 import supertest from 'supertest';
 import Client from '../../database';
-import { createAuthToken } from '../../utils/jwtAuthentication';
-
-/*
-Create a dummy token to test enpoints that require authentication
-*/
-const token = createAuthToken('test')
+import { testToken } from '../helpers/testToken';
 
 const request = supertest(app);
 
@@ -14,7 +9,7 @@ describe('Products controller', () => {
   it('posts /products: returns a product in JSON format', async () => {
     const response = await request
       .post('/products')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${testToken}`)
       .send({ name: 'bike', price: 200, category: 'sports', rating: 4.32 });
 
     expect(response.status).toBe(200);
@@ -56,7 +51,9 @@ describe('Products controller', () => {
   });
 
   it('deletes /products/:id: returns the deleted product in JSON format', async () => {
-    const response = await request.delete('/products/1').set('Authorization', `Bearer ${token}`);
+    const response = await request
+      .delete('/products/1')
+      .set('Authorization', `Bearer ${testToken}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({

@@ -3,6 +3,7 @@ import { userList, userListWithIdAndNoPwd } from '../helpers/userTestData';
 import { ProductStore } from '../../models/product';
 import { productList } from '../helpers/productTestData';
 import { OrderStore } from '../../models/order';
+import { testToken } from '../helpers/testToken';
 import app from '../../server';
 import supertest from 'supertest';
 import bcrypt from 'bcrypt';
@@ -17,15 +18,22 @@ const { PEPPER } = process.env;
 
 describe('Users controller', () => {
   it('posts /users: returns a token', async () => {
-    const response = await request.post('/users').send(userList[0]);
+    const response = await request
+      .post('/users')
+      .set('Authorization', `Bearer ${testToken}`)
+      .send(userList[0]);
 
     expect(response.status).toBe(200);
-    expect(response.body).toBeInstanceOf(String)
-    expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
+    expect(response.body).toBeInstanceOf(String);
+    expect(response.body).toMatch(
+      /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/
+    );
   });
 
   it('gets /users: returns a list of users in JSON format with hashed passwords', async () => {
-    const response = await request.get('/users');
+    const response = await request
+      .get('/users')
+      .set('Authorization', `Bearer ${testToken}`);
     const returnedUsers = response.body.map((user: User) => {
       return _.pick(user, ['id', 'username', 'firstName', 'lastName']);
     });
@@ -39,7 +47,9 @@ describe('Users controller', () => {
   });
 
   it('gets /users/:id: returns a user in JSON format with a hashed password', async () => {
-    const response = await request.get('/users/1');
+    const response = await request
+      .get('/users/1')
+      .set('Authorization', `Bearer ${testToken}`);
     const pwdCheck = bcrypt.compareSync(
       userList[0].password + PEPPER,
       response.body.password
@@ -55,16 +65,20 @@ describe('Users controller', () => {
   it('gets /auth: returns a token if the username/password combination is valid', async () => {
     const response = await request
       .get('/auth')
+      .set('Authorization', `Bearer ${testToken}`)
       .send({ username: userList[0].username, password: userList[0].password });
 
     expect(response.status).toBe(200);
-    expect(response.body).toBeInstanceOf(String)
-    expect(response.body).toMatch(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
+    expect(response.body).toBeInstanceOf(String);
+    expect(response.body).toMatch(
+      /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/
+    );
   });
 
   it('gets /auth: returns an error message if the username/password combination is not valid', async () => {
     const response = await request
       .get('/auth')
+      .set('Authorization', `Bearer ${testToken}`)
       .send({ username: userList[0].username, password: 'test' });
 
     expect(response.status).toBe(200);
@@ -80,6 +94,7 @@ describe('Users controller', () => {
 
     const response = await request
       .post('/users/1/add-product-to-order')
+      .set('Authorization', `Bearer ${testToken}`)
       .send({ productId: 1, quantity: 10 });
 
     expect(response.status).toBe(200);
@@ -94,6 +109,7 @@ describe('Users controller', () => {
   it('deletes /users/:id/remove-product-from-order: returns the order details', async () => {
     const response = await request
       .delete('/users/1/remove-product-from-order')
+      .set('Authorization', `Bearer ${testToken}`)
       .send({ productId: 1 });
 
     expect(response.status).toBe(200);

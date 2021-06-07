@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderRouter = void 0;
 const order_1 = require("../models/order");
+const jwtAuthentication_1 = require("../utils/jwtAuthentication");
 const store = new order_1.OrderStore();
 const create = async (req, res) => {
     try {
@@ -48,9 +49,9 @@ const completed = async (req, res) => {
     }
 };
 const orderRouter = (app) => {
-    app.post('/orders', create);
-    app.put('/orders', update);
-    app.get('/orders/users/:userId/active', active);
-    app.get('/orders/users/:userId/completed', completed);
+    app.post('/orders', jwtAuthentication_1.verifyAuthToken, create);
+    app.put('/orders', jwtAuthentication_1.verifyAuthToken, update);
+    app.get('/orders/users/:userId/active', jwtAuthentication_1.verifyAuthToken, active);
+    app.get('/orders/users/:userId/completed', jwtAuthentication_1.verifyAuthToken, completed);
 };
 exports.orderRouter = orderRouter;
