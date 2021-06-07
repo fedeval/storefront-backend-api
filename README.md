@@ -1,54 +1,144 @@
-# Storefront Backend Project
+# Storefront Backend API - Udacity Fullstack JS Nanodegree #
 
-## Getting Started
+## Introduction ##
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+This is a REST API simulating an e-commerce backend based on three models: Products, Orders and Users. A detailed list of the endpoints and actions available is available in the [REQUIREMENTS.md](https://github.com/fedeval/storefront-backend-api/blob/main/REQUIREMENTS.md) file.
 
-## Required Technologies
-Your application must make use of the following libraries:
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+---
+## Setup ##
 
-## Steps to Completion
+### Database config ###
 
-### 1. Plan to Meet Requirements
+The API connects to a postgres database. As a first step you should create two databases (development and test) on your local machine. Run the command `psql postgres` in terminal to open the postgres CLI. The run the following:
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+```SQL
+CREATE USER storefront_user WITH PASSWORD 'YOUR_PASSWORD_HERE';
+CREATE DATABASE storefront;
+\c storefront;
+GRANT ALL PRIVILEGES ON DATABASE storefront TO storefront_user;
+CREATE DATABASE storefront_test;
+\c storefront_test;
+GRANT ALL PRIVILEGES ON DATABASE storefront_test TO storefront_user;
+````
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+To make sure the API can connect to the db you it is necessary to create a `database.json` file with the following format
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+```json
+{
+  "dev": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "storefront",
+    "user": "storefront_user",
+    "password": 'YOUR_PASSWORD_HERE'
+  },
+  "test": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "storefront_test",
+    "user": "storefront_user",
+    "password": 'YOUR_PASSWORD_HERE'
+  }
+}
+```
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+Note: it is best to add this file to a `.gitignore` file in order to keep the password hidden.
 
-### 2.  DB Creation and Migrations
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
+### Environment variables ###
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+The API relies on several environment variables to function. `dotenv` is already included in the `package.json`file, so it is only necessary to create a `.env` file with the following variables:
 
-### 3. Models
+| Name              | Value            | Notes         |
+| ------------------|:----------------:|:-------------:|
+| POSTGRES_HOST     | 127.0.0.1        | Same value as in the database.json file |
+| POSTGRES_DB       | storefront       | Same value as in the database.json file |   
+| POSTGRES_TEST_DB  | storefront_test  | Same value as in the database.json file |
+| POSTGRES_USER     | storefront_user  | Same value as in the database.json file |
+| POSTGRES_PASSWORD | YOUR_PASSWORD    | Same value as in the database.json file |
+| ENV               | dev              | Used to set the DB environment. The test scripts automatically changes it to test when runnning, using the crosss-env package.|
+| PORT              | 3000             | The API will run on http://localhost.${PORT} |
+| SALT_ROUNDS       | 10               | Number of salt rounds the password hashing function of the bcrypt package will be using|
+| PEPPER            | YOUR_STRING_HERE | A string of your choise that bcrypt will be adding when prior to hashing passwords for an extra layer of security |
+| TOKEN_SECRET      | YOUR_STRING_HERE | A string that will be used by jwt to generate authentication tokens. The more complex the better, it should be random carachters ideally. |
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+**IMPORTANT: .env should be added to .gitignore and never committed to a public repo.**
 
-### 4. Express Handlers
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+---
+## Getting Started ##
 
-### 5. JWTs
+### Installing dependencies ###
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+After cloning the repo, all the project dependencies can be installed using npm:
+```
+npm install
+```
 
-### 6. QA and `README.md`
+### Running the server ###
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
+To execute the application use the following command in terminal:
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+```
+npm run start
+```
+
+the app will then be available on port 3000 by default, but that can be changed by editing the PORT environment variable (more details on environment variables in the next section.
+
+### Scripts ###
+
+The following actions can be executed through npm scripts:
+
+#### Transpiling typescript to javascript ####
+
+```
+npm run build
+```
+
+The transpiled code will be available in the `build` folder.
+
+#### Testing ####
+
+A set of jasmine testing suites can be used to test both the endpoints as well as the models. 
+
+```
+npm run test
+```
+NOTE: this script runs migrations on a test database.
+
+
+#### Formatting ####
+
+The code can be automatically formatted using prettier. The formatting options can be customised by editin the `.prettierrc`file.
+
+```
+npm run prettier
+```
+
+#### Linting ####
+
+The code can ba automatically linted using ESlint. Note that ESlint will also use prettier to test for incorrect formatting. Rules, plugins and extensions for ESlint can be modified through the `.eslintrc` file.
+
+```
+npm run lint
+```
+---
+## How to use ##
+
+The API offers one endpoint to access and resize images available in the `public/images/full` folder.
+
+The endpoint is `api/images` and requires three query params:
+
+| Query Param   | Value         |
+| ------------- |:-------------:|
+| filename      | the filename (without extension) of one of the images available in the folder |
+| height        | it should be a positive integer      |
+| width         | it should be a positive integer      |
+
+Note that full instructions including a preview of all the available images and their filenames can be accessed using the main API endpoint. Assuming the app is running on port 3000 that would be:
+
+[http://localhost:3000/api](http://localhost:3000/api)
+
+An example of a correct endpoint call would be: 
+
+[http://localhost:3000/api/images?filename=palmtunnel&height=250&width=220](http://localhost:3000/api/images?filename=palmtunnel&height=250&width=220)
