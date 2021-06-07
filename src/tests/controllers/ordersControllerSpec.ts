@@ -1,7 +1,7 @@
 import app from '../../server';
 import supertest from 'supertest';
-import { User, UserStore } from '../../models/user';
-import { userList } from '../helpers/userTestData'
+import { UserStore } from '../../models/user';
+import { userList } from '../helpers/userTestData';
 import Client from '../../database';
 
 const request = supertest(app);
