@@ -8,6 +8,7 @@ const supertest_1 = __importDefault(require("supertest"));
 const user_1 = require("../../models/user");
 const userTestData_1 = require("../helpers/userTestData");
 const database_1 = __importDefault(require("../../database"));
+const testToken_1 = require("../helpers/testToken");
 const request = supertest_1.default(server_1.default);
 describe('Orders controller', () => {
     beforeAll(async () => {
@@ -15,7 +16,10 @@ describe('Orders controller', () => {
         await userStore.create(userTestData_1.userList[0]);
     });
     it('posts on /orders: returns an active order in JSON format', async () => {
-        const response = await request.post('/orders').send({ userId: 1 });
+        const response = await request
+            .post('/orders')
+            .set('Authorization', `Bearer ${testToken_1.testToken}`)
+            .send({ userId: 1 });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,
@@ -24,7 +28,9 @@ describe('Orders controller', () => {
         });
     });
     it('gets /orders/users/:userId/active: returns an active order in JSON format', async () => {
-        const response = await request.get('/orders/users/1/active');
+        const response = await request
+            .get('/orders/users/1/active')
+            .set('Authorization', `Bearer ${testToken_1.testToken}`);
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,
@@ -33,7 +39,10 @@ describe('Orders controller', () => {
         });
     });
     it('puts /orders: returns a completed order in JSON format', async () => {
-        const response = await request.put('/orders').send({ userId: 1 });
+        const response = await request
+            .put('/orders')
+            .set('Authorization', `Bearer ${testToken_1.testToken}`)
+            .send({ userId: 1 });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,
@@ -42,7 +51,9 @@ describe('Orders controller', () => {
         });
     });
     it('gets /orders/users/:userId/completed: returns a list of completed orders in JSON format', async () => {
-        const response = await request.get('/orders/users/1/completed');
+        const response = await request
+            .get('/orders/users/1/completed')
+            .set('Authorization', `Bearer ${testToken_1.testToken}`);
         expect(response.status).toBe(200);
         expect(response.body).toEqual([
             {

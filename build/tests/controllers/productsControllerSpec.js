@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = __importDefault(require("../../server"));
 const supertest_1 = __importDefault(require("supertest"));
 const database_1 = __importDefault(require("../../database"));
+const testToken_1 = require("../helpers/testToken");
 const request = supertest_1.default(server_1.default);
 describe('Products controller', () => {
     it('posts /products: returns a product in JSON format', async () => {
         const response = await request
             .post('/products')
+            .set('Authorization', `Bearer ${testToken_1.testToken}`)
             .send({ name: 'bike', price: 200, category: 'sports', rating: 4.32 });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
@@ -46,7 +48,9 @@ describe('Products controller', () => {
         });
     });
     it('deletes /products/:id: returns the deleted product in JSON format', async () => {
-        const response = await request.get('/products/1');
+        const response = await request
+            .delete('/products/1')
+            .set('Authorization', `Bearer ${testToken_1.testToken}`);
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
             id: 1,

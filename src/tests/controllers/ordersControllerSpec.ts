@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { UserStore } from '../../models/user';
 import { userList } from '../helpers/userTestData';
 import Client from '../../database';
+import { testToken } from '../helpers/testToken';
 
 const request = supertest(app);
 
@@ -13,7 +14,10 @@ describe('Orders controller', () => {
   });
 
   it('posts on /orders: returns an active order in JSON format', async () => {
-    const response = await request.post('/orders').send({ userId: 1 });
+    const response = await request
+      .post('/orders')
+      .set('Authorization', `Bearer ${testToken}`)
+      .send({ userId: 1 });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -24,7 +28,9 @@ describe('Orders controller', () => {
   });
 
   it('gets /orders/users/:userId/active: returns an active order in JSON format', async () => {
-    const response = await request.get('/orders/users/1/active');
+    const response = await request
+      .get('/orders/users/1/active')
+      .set('Authorization', `Bearer ${testToken}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -35,7 +41,10 @@ describe('Orders controller', () => {
   });
 
   it('puts /orders: returns a completed order in JSON format', async () => {
-    const response = await request.put('/orders').send({ userId: 1 });
+    const response = await request
+      .put('/orders')
+      .set('Authorization', `Bearer ${testToken}`)
+      .send({ userId: 1 });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -46,7 +55,9 @@ describe('Orders controller', () => {
   });
 
   it('gets /orders/users/:userId/completed: returns a list of completed orders in JSON format', async () => {
-    const response = await request.get('/orders/users/1/completed');
+    const response = await request
+      .get('/orders/users/1/completed')
+      .set('Authorization', `Bearer ${testToken}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual([

@@ -1,5 +1,6 @@
 import { Application, Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
+import { createAuthToken, verifyAuthToken } from '../utils/jwtAuthentication';
 
 const store = new UserStore();
 
@@ -25,15 +26,16 @@ const show = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
+  const userInfo: User = {
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    password: req.body.password
+  };
   try {
-    const userInfo: User = {
-      username: req.body.username,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      password: req.body.password
-    };
     const user = await store.create(userInfo);
-    res.json(user);
+    const token = createAuthToken(user.username);
+    res.json(token);
   } catch (err) {
     console.error(err.message);
     res.status(500).send(`${err.message}`);
@@ -44,7 +46,8 @@ const authenticate = async (req: Request, res: Response) => {
   try {
     const user = await store.authenticate(req.body.username, req.body.password);
     if (user) {
-      res.json(user);
+      const token = createAuthToken(user.username);
+      res.json(token);
     } else {
       res.send('Invalid username and/or password');
     }
@@ -83,10 +86,14 @@ const removeProduct = async (req: Request, res: Response) => {
 };
 
 export const userRouter = (app: Application): void => {
-  app.get('/users', index);
-  app.get('/users/:id', show);
-  app.post('/users', create);
-  app.get('/auth', authenticate);
-  app.post('/users/:id/add-product-to-order', addProduct);
-  app.delete('/users/:id/remove-product-from-order', removeProduct);
+  app.get('/users', verifyAuthToken, index);
+  app.get('/users/:id', verifyAuthToken, show);
+  app.post('/users', verifyAuthToken, create);
+  app.get('/auth', verifyAuthToken, authenticate);
+  app.post('/users/:id/add-product-to-order', verifyAuthToken, addProduct);
+  app.delete(
+    '/users/:id/remove-product-from-order',
+    verifyAuthToken,
+    removeProduct
+  );
 };

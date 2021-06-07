@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const user_1 = require("../models/user");
+const jwtAuthentication_1 = require("../utils/jwtAuthentication");
 const store = new user_1.UserStore();
 const index = async (req, res) => {
     try {
@@ -25,15 +26,16 @@ const show = async (req, res) => {
     }
 };
 const create = async (req, res) => {
+    const userInfo = {
+        username: req.body.username,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password
+    };
     try {
-        const userInfo = {
-            username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: req.body.password
-        };
         const user = await store.create(userInfo);
-        res.json(user);
+        const token = jwtAuthentication_1.createAuthToken(user.username);
+        res.json(token);
     }
     catch (err) {
         console.error(err.message);
@@ -44,7 +46,8 @@ const authenticate = async (req, res) => {
     try {
         const user = await store.authenticate(req.body.username, req.body.password);
         if (user) {
-            res.json(user);
+            const token = jwtAuthentication_1.createAuthToken(user.username);
+            res.json(token);
         }
         else {
             res.send('Invalid username and/or password');
@@ -80,11 +83,11 @@ const removeProduct = async (req, res) => {
     }
 };
 const userRouter = (app) => {
-    app.get('/users', index);
-    app.get('/users/:id', show);
-    app.post('/users', create);
-    app.get('/auth', authenticate);
-    app.post('/users/:id/add-product-to-order', addProduct);
-    app.delete('/users/:id/remove-product-from-order', removeProduct);
+    app.get('/users', jwtAuthentication_1.verifyAuthToken, index);
+    app.get('/users/:id', jwtAuthentication_1.verifyAuthToken, show);
+    app.post('/users', jwtAuthentication_1.verifyAuthToken, create);
+    app.get('/auth', jwtAuthentication_1.verifyAuthToken, authenticate);
+    app.post('/users/:id/add-product-to-order', jwtAuthentication_1.verifyAuthToken, addProduct);
+    app.delete('/users/:id/remove-product-from-order', jwtAuthentication_1.verifyAuthToken, removeProduct);
 };
 exports.userRouter = userRouter;

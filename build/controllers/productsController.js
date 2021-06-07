@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productRouter = void 0;
 const product_1 = require("../models/product");
+const jwtAuthentication_1 = require("../utils/jwtAuthentication");
 const store = new product_1.ProductStore();
 const index = async (req, res) => {
     try {
@@ -54,7 +55,7 @@ const destroy = async (req, res) => {
 const productRouter = (app) => {
     app.get('/products', index);
     app.get('/products/:id', show);
-    app.post('/products', create);
-    app.delete('/products/:id', destroy);
+    app.post('/products', jwtAuthentication_1.verifyAuthToken, create);
+    app.delete('/products/:id', jwtAuthentication_1.verifyAuthToken, destroy);
 };
 exports.productRouter = productRouter;
