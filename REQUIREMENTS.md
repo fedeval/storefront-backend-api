@@ -14,19 +14,21 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Index [token required] : `'/users' [GET]`
 - Show [token required] : `'/users/:id' [GET]`
 - Create [token required] : `'/users' [POST]`
-- Authenticate (args: username, password) [token required] : `'/users/auth' [GET]`
-- AddProductToOrder (args: orderId, productId) [token required]: `'/users/:id/products/:productId/orders [POST]`
-- RemoveProductFromOrder (args: orderId, productId) [token required] `'/users/:id/products/:productId/orders [DELETE]`
+- Authenticate (args: username, password) [token required] : `'/auth' [GET]`
+- AddProductToOrder (args: orderId, productId, quantity) [token required]: `'/users/:id/add-product-to-order' [POST]`
+- RemoveProductFromOrder (args: orderId, productId) [token required] `'/users/:id/remove-product-from-order' [DELETE]`
 
 #### Orders
-- Create (args: userId) [token required] : `'/orders/' [POST]`
-- UpdateStatus [token required]: `'/orders/:id' [PUT]`
-- Active Order by user (args: user id)[token required] : `'orders/users/:userId/active' [GET]`
-- Completed Orders by user (args: user id)[token required] `'orders/users/:userId/completed' [GET]`
+- Create (args: userId) [token required] : `'/orders' [POST]`
+- UpdateStatus (args: userId) [token required]: `'/orders' [PUT]`
+- Active Order by user (args: user id) [token required] : `'orders/users/:userId/active' [GET]`
+- Completed Orders by user (args: user id) [token required] `'orders/users/:userId/completed' [GET]`
 
+<!-- TBD
 ### Dashboard
 - [OPTIONAL] Top 5 most popular products  : `/top-five-products' [GET]`
 - [OPTIONAL] Products by category (args: product category) : `'/products-in-category'[GET]`
+-->
 
 ## Data Shapes
 #### Product
